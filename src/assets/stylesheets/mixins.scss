@@ -1,0 +1,24 @@
+@import './colors';
+
+@mixin border-light {
+  border: 1px solid #e6ecf0;
+  border-top: none;
+}
+
+@mixin create-post {
+  display: flex;
+  padding: 5px 20px;
+  align-items: center;
+
+  .create-post_input {
+    width: 80%;
+    margin-right: 20px;
+    border: 1px solid $blue-color;
+    border-radius: 10px;
+  }
+
+  .create-post_button {
+    width: 100px;
+    height: 20px;
+  }
+}

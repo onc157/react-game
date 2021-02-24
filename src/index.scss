@@ -1,0 +1,11 @@
+@import 'assets/stylesheets/common/reset';
+@import 'assets/stylesheets/fonts';
+
+#root {
+  @include lato-bold();
+
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+
