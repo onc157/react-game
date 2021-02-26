@@ -1,7 +1,16 @@
 import React from 'react'
+import './style.scss'
 
-const FieldCell = (): JSX.Element => {
-  return <>FieldCell</>
+type PropTypes = {
+  value: number | null
+}
+
+const FieldCell: React.FC<PropTypes> = ({ value }): JSX.Element => {
+  return (
+    <div className={value ? 'cell-wrapper cell__active' : 'cell-wrapper'}>
+      <span className="cell__number">{value}</span>
+    </div>
+  )
 }
 
 export default FieldCell

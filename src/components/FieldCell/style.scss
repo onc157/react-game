@@ -1,0 +1,19 @@
+.cell-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 1px;
+  width: 100px;
+  height: 100px;
+  background-color: darkgray;
+
+  .cell__number {
+    font-size: 30px;
+    color: #f5f8fa;
+  }
+}
+
+.cell__active {
+  background-color: #1da1f2;
+}
