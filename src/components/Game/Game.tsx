@@ -89,11 +89,94 @@ const Game = (): JSX.Element => {
     return newData
   }
 
+  const swipeRight = (copyData: GameDataType) => {
+    const newData = getCopyOfArray(copyData)
+
+    for (let i = fieldSize - 1; i >= 0; i -= 1) {
+      const row = newData[i]
+      let prevIndex = row.length - 1
+      let currentIndex = prevIndex - 1
+
+      while (prevIndex > 0) {
+        if (currentIndex === -1) {
+          currentIndex = prevIndex - 1
+          prevIndex -= 1
+          continue
+        }
+        if (row[prevIndex] === 0 && row[currentIndex] === 0) {
+          currentIndex -= 1
+        } else if (row[prevIndex] === 0 && row[currentIndex] !== 0) {
+          row[prevIndex] = row[currentIndex]
+          row[currentIndex] = 0
+          currentIndex -= 1
+        } else if (row[prevIndex] !== 0 && row[currentIndex] === 0) {
+          currentIndex -= 1
+        } else if (row[prevIndex] !== 0 && row[currentIndex] !== 0) {
+          if (row[prevIndex] === row[currentIndex]) {
+            row[prevIndex] = row[prevIndex] + row[currentIndex]
+            row[currentIndex] = 0
+            prevIndex = currentIndex - 1
+            currentIndex -= 1
+          } else {
+            prevIndex -= 1
+            currentIndex = prevIndex - 1
+          }
+        }
+      }
+    }
+    if (!isIdenticalArrays(copyData, newData)) {
+      addRandomValue(newData)
+    }
+
+    return newData
+  }
+  // const swipeUp = () => {}
+
+  const swipeDown = (copyData: GameDataType) => {
+    const newData = getCopyOfArray(copyData)
+
+    for (let i = fieldSize - 1; i >= 0; i -= 1) {
+      let prevIndex = newData.length - 1
+      let currentIndex = prevIndex - 1
+
+      while (prevIndex > 0) {
+        if (currentIndex === -1) {
+          currentIndex = prevIndex - 1
+          prevIndex -= 1
+          continue
+        }
+        if (newData[prevIndex][i] === 0 && newData[currentIndex][i] === 0) {
+          currentIndex -= 1
+        } else if (newData[prevIndex][i] === 0 && newData[currentIndex][i] !== 0) {
+          newData[prevIndex][i] = newData[currentIndex][i]
+          newData[currentIndex][i] = 0
+          currentIndex -= 1
+        } else if (newData[prevIndex][i] !== 0 && newData[currentIndex][i] === 0) {
+          currentIndex -= 1
+        } else if (newData[prevIndex][i] !== 0 && newData[currentIndex][i] !== 0) {
+          if (newData[prevIndex][i] === newData[currentIndex][i]) {
+            newData[prevIndex][i] = newData[prevIndex][i] + newData[currentIndex][i]
+            newData[currentIndex][i] = 0
+            prevIndex = currentIndex - 1
+            currentIndex -= 1
+          } else {
+            prevIndex -= 1
+            currentIndex = prevIndex - 1
+          }
+        }
+      }
+    }
+    if (!isIdenticalArrays(copyData, newData)) {
+      addRandomValue(newData)
+    }
+
+    return newData
+  }
+
   const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        console.log('left')
         setGameData(prevState => {
           const copyData = getCopyOfArray(prevState)
           return swipeLeft(copyData)
@@ -101,15 +184,24 @@ const Game = (): JSX.Element => {
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        console.log('right')
-        break
-      case KEYS.ARROW_DOWN:
-      case KEYS.KEY_S:
-        console.log('down')
+        setGameData(prevState => {
+          const copyData = getCopyOfArray(prevState)
+          return swipeRight(copyData)
+        })
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        console.log('up')
+        // setGameData(prevState => {
+        //   const copyData = getCopyOfArray(prevState)
+        //   return swipeUp(copyData)
+        // })
+        break
+      case KEYS.ARROW_DOWN:
+      case KEYS.KEY_S:
+        setGameData(prevState => {
+          const copyData = getCopyOfArray(prevState)
+          return swipeDown(copyData)
+        })
         break
       default:
         break
@@ -117,7 +209,6 @@ const Game = (): JSX.Element => {
   }
 
   const handlerClick = () => {
-    setNewGame(true)
     const newData = getCopyOfArray(gameData)
     addRandomValue(newData)
     setGameData(newData)
