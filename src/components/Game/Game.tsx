@@ -3,7 +3,6 @@ import GameMenu from '../GameMenu/GameMenu'
 import GameStats from '../GameStats/GameStats'
 import GameField from '../GameField/GameField'
 import './style.scss'
-import { Button } from '@material-ui/core'
 import { getRandomFieldValue } from '@helpers/getRandomFieldValue'
 import { getInitialData } from '@helpers/getInitialData'
 import { INITIAL_MOVES, KEYS } from '../../constants'
@@ -15,6 +14,12 @@ import { isIdenticalArrays } from '@helpers/isIdenticalArrays'
 const Game = (): JSX.Element => {
   const [fieldSize, setFieldSize] = useState<number>(4)
   const [gameData, setGameData] = useState<GameDataType>(getInitialData(fieldSize))
+  const [initTime, setInitTime] = useState(new Date())
+  const [nowTime, setNowTime] = useState(new Date())
+  const [isPause, setPause] = useState(false)
+  const [pauseDelay, setPauseDelay] = useState(0)
+  const [startPauseDelay, setStartPauseDelay] = useState<Date | undefined>()
+  const [languageIsEn, setLanguage] = useState(false)
 
   const addRandomValue = (newData: GameDataType) => {
     let isAdded = false
@@ -40,12 +45,25 @@ const Game = (): JSX.Element => {
     setGameData(initialData)
   }
 
+  const setTimer = () => {
+    console.log(isPause)
+    if (!isPause) {
+      const diffTime = new Date().getTime() - initTime.getTime() - pauseDelay
+      setNowTime(new Date(diffTime))
+    }
+  }
+
   useEffect(() => {
     initField()
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
+
+  useEffect(() => {
+    const updateTimeInterval = setInterval(() => setTimer(), 1000)
+    return () => clearInterval(updateTimeInterval)
+  }, [isPause, pauseDelay, startPauseDelay])
 
   const swipeLeft = (copyData: GameDataType) => {
     const newData = getCopyOfArray(copyData)
@@ -130,6 +148,7 @@ const Game = (): JSX.Element => {
 
     return newData
   }
+
   const swipeUp = (copyData: GameDataType) => {
     const newData = getCopyOfArray(copyData)
 
@@ -247,19 +266,28 @@ const Game = (): JSX.Element => {
     }
   }
 
-  const handlerClick = () => {
-    const newData = getCopyOfArray(gameData)
-    addRandomValue(newData)
-    setGameData(newData)
+  const onSetPause = () => {
+    if (!isPause) {
+      setStartPauseDelay(new Date())
+      setPauseDelay(0)
+      setPause(!isPause)
+    } else {
+      const pause = new Date().getTime() - startPauseDelay!.getTime()
+      setPauseDelay(pause)
+      setPause(!isPause)
+    }
   }
 
   return (
     <div className="game-wrapper">
-      <GameMenu gameData={gameData} setGameData={setGameData} addRandomValue={addRandomValue} fieldSize={fieldSize} />
-      <GameStats />
-      <Button variant="contained" color="primary" onClick={handlerClick}>
-        Test
-      </Button>
+      <GameMenu
+        setGameData={setGameData}
+        addRandomValue={addRandomValue}
+        fieldSize={fieldSize}
+        onSetPause={onSetPause}
+        languageIsEn={languageIsEn}
+      />
+      <GameStats nowTime={nowTime} />
       <GameField cellsValue={gameData} />
     </div>
   )

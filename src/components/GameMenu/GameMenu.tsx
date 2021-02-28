@@ -1,18 +1,21 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, Typography } from '@material-ui/core'
 import './style.scss'
 import { getInitialData } from '@helpers/getInitialData'
 import { GameDataType } from '../../types/types.'
 import { INITIAL_MOVES } from '../../constants'
+import About from '@components/About/About'
+import Score from '@components/Score/Score'
 
 type PropTypes = {
-  gameData: GameDataType
   setGameData: (initialData: GameDataType) => void
   addRandomValue: (gameData: GameDataType) => void
   fieldSize: number
+  onSetPause: () => void
+  languageIsEn: boolean
 }
 
-const GameMenu: React.FC<PropTypes> = ({ gameData, setGameData, addRandomValue, fieldSize }): JSX.Element => {
+const GameMenu: React.FC<PropTypes> = ({ setGameData, addRandomValue, fieldSize, onSetPause, languageIsEn }): JSX.Element => {
   const newGame = () => {
     const initialData = getInitialData(fieldSize)
 
@@ -26,16 +29,15 @@ const GameMenu: React.FC<PropTypes> = ({ gameData, setGameData, addRandomValue, 
   return (
     <div className="menu-wrapper">
       <Button variant="contained" color="primary" onClick={newGame}>
-        New game
+        {languageIsEn ? 'New game' : 'Новая игра'}
       </Button>
-      <Button variant="contained" color="primary">
-        Score
-      </Button>
-      <Button variant="contained" color="primary">
-        About
-      </Button>
+      <About languageIsEn={languageIsEn} />
+      <Score languageIsEn={languageIsEn} />
       <Button variant="contained" color="primary">
         Settings
+      </Button>
+      <Button variant="contained" color="primary" onClick={onSetPause}>
+        Pause
       </Button>
     </div>
   )
