@@ -56,7 +56,7 @@ const Game = (): JSX.Element => {
       let currentIndex = 1
 
       while (prevIndex < fieldSize) {
-        if (currentIndex === 4) {
+        if (currentIndex === fieldSize) {
           currentIndex = prevIndex + 1
           prevIndex += 1
           continue
@@ -130,7 +130,46 @@ const Game = (): JSX.Element => {
 
     return newData
   }
-  // const swipeUp = () => {}
+  const swipeUp = (copyData: GameDataType) => {
+    const newData = getCopyOfArray(copyData)
+
+    for (let i = 0; i < fieldSize; i += 1) {
+      let prevIndex = 0
+      let currentIndex = 1
+
+      while (prevIndex < fieldSize) {
+        if (currentIndex === fieldSize) {
+          currentIndex = prevIndex + 1
+          prevIndex += 1
+          continue
+        }
+        if (newData[prevIndex][i] === 0 && newData[currentIndex][i] === 0) {
+          currentIndex += 1
+        } else if (newData[prevIndex][i] === 0 && newData[currentIndex][i] !== 0) {
+          newData[prevIndex][i] = newData[currentIndex][i]
+          newData[currentIndex][i] = 0
+          currentIndex += 1
+        } else if (newData[prevIndex][i] !== 0 && newData[currentIndex][i] === 0) {
+          currentIndex += 1
+        } else if (newData[prevIndex][i] !== 0 && newData[currentIndex][i] !== 0) {
+          if (newData[prevIndex][i] === newData[currentIndex][i]) {
+            newData[prevIndex][i] = newData[prevIndex][i] + newData[currentIndex][i]
+            newData[currentIndex][i] = 0
+            prevIndex = currentIndex + 1
+            currentIndex += 1
+          } else {
+            prevIndex += 1
+            currentIndex = prevIndex + 1
+          }
+        }
+      }
+    }
+    if (!isIdenticalArrays(copyData, newData)) {
+      addRandomValue(newData)
+    }
+
+    return newData
+  }
 
   const swipeDown = (copyData: GameDataType) => {
     const newData = getCopyOfArray(copyData)
@@ -191,10 +230,10 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        // setGameData(prevState => {
-        //   const copyData = getCopyOfArray(prevState)
-        //   return swipeUp(copyData)
-        // })
+        setGameData(prevState => {
+          const copyData = getCopyOfArray(prevState)
+          return swipeUp(copyData)
+        })
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
