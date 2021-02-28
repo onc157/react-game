@@ -31,13 +31,13 @@ const Game = (): JSX.Element => {
   }
 
   const initField = () => {
-    const newData = getCopyOfArray(gameData)
+    const initialData = getCopyOfArray(gameData)
 
     for (let i = 0; i < INITIAL_MOVES; i += 1) {
-      addRandomValue(newData)
+      addRandomValue(initialData)
     }
 
-    setGameData(newData)
+    setGameData(initialData)
   }
 
   useEffect(() => {
@@ -73,8 +73,8 @@ const Game = (): JSX.Element => {
           if (row[prevIndex] === row[currentIndex]) {
             row[prevIndex] = row[prevIndex] + row[currentIndex]
             row[currentIndex] = 0
-            prevIndex = currentIndex + 1
-            currentIndex += 1
+            currentIndex = prevIndex + 1
+            prevIndex += 1
           } else {
             prevIndex += 1
             currentIndex = prevIndex + 1
@@ -115,8 +115,8 @@ const Game = (): JSX.Element => {
           if (row[prevIndex] === row[currentIndex]) {
             row[prevIndex] = row[prevIndex] + row[currentIndex]
             row[currentIndex] = 0
-            prevIndex = currentIndex - 1
-            currentIndex -= 1
+            currentIndex = prevIndex - 1
+            prevIndex -= 1
           } else {
             prevIndex -= 1
             currentIndex = prevIndex - 1
@@ -155,8 +155,8 @@ const Game = (): JSX.Element => {
           if (newData[prevIndex][i] === newData[currentIndex][i]) {
             newData[prevIndex][i] = newData[prevIndex][i] + newData[currentIndex][i]
             newData[currentIndex][i] = 0
-            prevIndex = currentIndex + 1
-            currentIndex += 1
+            currentIndex = prevIndex + 1
+            prevIndex += 1
           } else {
             prevIndex += 1
             currentIndex = prevIndex + 1
@@ -196,8 +196,8 @@ const Game = (): JSX.Element => {
           if (newData[prevIndex][i] === newData[currentIndex][i]) {
             newData[prevIndex][i] = newData[prevIndex][i] + newData[currentIndex][i]
             newData[currentIndex][i] = 0
-            prevIndex = currentIndex - 1
-            currentIndex -= 1
+            currentIndex = prevIndex - 1
+            prevIndex -= 1
           } else {
             prevIndex -= 1
             currentIndex = prevIndex - 1
@@ -255,7 +255,7 @@ const Game = (): JSX.Element => {
 
   return (
     <div className="game-wrapper">
-      <GameMenu setGameData={setGameData} fieldSize={fieldSize} initField={initField} />
+      <GameMenu gameData={gameData} setGameData={setGameData} addRandomValue={addRandomValue} fieldSize={fieldSize} />
       <GameStats />
       <Button variant="contained" color="primary" onClick={handlerClick}>
         Test

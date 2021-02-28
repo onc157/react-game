@@ -3,17 +3,24 @@ import { Button } from '@material-ui/core'
 import './style.scss'
 import { getInitialData } from '@helpers/getInitialData'
 import { GameDataType } from '../../types/types.'
+import { INITIAL_MOVES } from '../../constants'
 
 type PropTypes = {
+  gameData: GameDataType
   setGameData: (initialData: GameDataType) => void
+  addRandomValue: (gameData: GameDataType) => void
   fieldSize: number
-  initField: () => void
 }
 
-const GameMenu: React.FC<PropTypes> = ({ setGameData, fieldSize, initField }): JSX.Element => {
+const GameMenu: React.FC<PropTypes> = ({ gameData, setGameData, addRandomValue, fieldSize }): JSX.Element => {
   const newGame = () => {
-    setGameData(getInitialData(fieldSize))
-    // initField()
+    const initialData = getInitialData(fieldSize)
+
+    for (let i = 0; i < INITIAL_MOVES; i += 1) {
+      addRandomValue(initialData)
+    }
+
+    setGameData(initialData)
   }
 
   return (
