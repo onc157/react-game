@@ -6,7 +6,6 @@ import './style.scss'
 import { getRandomFieldValue } from '@helpers/getRandomFieldValue'
 import { getInitialData } from '@helpers/getInitialData'
 import { GameDataType } from '../../types/types.'
-import { getCopyOfArray } from '@helpers/getCopyOfArray'
 import _ from 'lodash'
 import { isIdenticalArrays } from '@helpers/isIdenticalArrays'
 import swipeLeft from '../../utils/swipeLeft'
@@ -19,13 +18,16 @@ const Game = (): JSX.Element => {
   const [fieldSize, setFieldSize] = useState<number>(4)
   const [gameData, setGameData] = useState<GameDataType>(getInitialData(fieldSize))
   const [initTime, setInitTime] = useState(new Date())
-  const [nowTime, setNowTime] = useState(new Date())
+  const [nowTime, setNowTime] = useState<Date>(new Date(new Date().getTime() - new Date().getTime()))
   const [isPause, setPause] = useState(false)
   const [pauseDelay, setPauseDelay] = useState(0)
   const [startPauseDelay, setStartPauseDelay] = useState<Date | undefined>()
   const [languageIsEn, setLanguage] = useState(true)
   const [gameIsOver, setGameOver] = useState(false)
   const [gameIsStart, setStartGame] = useState(false)
+  const [aboutIsOpen, setAboutOpen] = useState(false)
+  const [settingsIsOpen, setSettingsOpen] = useState(false)
+  const [gameIsReset, setResetGame] = useState(false)
 
   const addRandomValue = (newData: GameDataType) => {
     let isAdded = false
@@ -47,15 +49,31 @@ const Game = (): JSX.Element => {
   }
 
   const initField = () => {
-    const initialData = getCopyOfArray(gameData)
+    const initialData = getInitialData(fieldSize)
 
     for (let i = 0; i < INITIAL_MOVES; i += 1) {
       addRandomValue(initialData)
     }
 
+    if (gameIsStart) {
+      setResetGame(false)
+      resetGame()
+    }
+
     setStartGame(true)
     setGameData(initialData)
   }
+
+  const resetGame = () => {
+    setPauseDelay(0)
+    setInitTime(new Date())
+    setNowTime(new Date(new Date().getTime() - new Date().getTime()))
+  }
+
+  useEffect(() => {
+    // check LocalStorage
+    initField()
+  }, [fieldSize, gameIsReset])
 
   const setTimer = () => {
     if (!isPause) {
@@ -65,14 +83,9 @@ const Game = (): JSX.Element => {
   }
 
   useEffect(() => {
-    // check LocalStorage
-    initField()
-  }, [])
-
-  useEffect(() => {
     const updateTimeInterval = setInterval(() => setTimer(), 1000)
     return () => clearInterval(updateTimeInterval)
-  }, [isPause, pauseDelay, startPauseDelay])
+  }, [isPause, pauseDelay, startPauseDelay, resetGame])
 
   const handleKeydown = (e: KeyboardEvent) => {
     let newData = []
@@ -150,11 +163,17 @@ const Game = (): JSX.Element => {
   return (
     <div className="game-wrapper">
       <GameMenu
-        setGameData={setGameData}
-        // addRandomValue={addRandomValue}
         fieldSize={fieldSize}
+        setFieldSize={setFieldSize}
         onSetPause={onSetPause}
         languageIsEn={languageIsEn}
+        resetGame={resetGame}
+        aboutIsOpen={aboutIsOpen}
+        setAboutOpen={setAboutOpen}
+        settingsIsOpen={settingsIsOpen}
+        setSettingsOpen={setSettingsOpen}
+        initField={initField}
+        setResetGame={setResetGame}
       />
       <GameStats nowTime={nowTime} />
       <GameField cellsValue={gameData} />

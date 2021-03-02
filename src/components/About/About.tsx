@@ -1,42 +1,39 @@
 import useStyles from '@components/About/style'
-import React, { useState } from 'react'
-import { Backdrop, Button, Fade, Grid, Modal, PropTypes, Typography } from '@material-ui/core'
+import React from 'react'
+import { Backdrop, Button, DialogActions, Fade, Grid, Modal, PropTypes, Typography } from '@material-ui/core'
 import { KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp } from '@material-ui/icons'
 
 type PropTypes = {
   languageIsEn: boolean
+  aboutIsOpen: boolean
+  setAboutOpen: (aboutIsOpen: boolean) => void
 }
 
-const About: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
+const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, setAboutOpen }): JSX.Element => {
   const classes = useStyles()
-  const [open, setOpen] = useState(false)
 
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
+  const handleAboutToggle = () => {
+    setAboutOpen(!aboutIsOpen)
   }
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <Button variant="contained" color="primary" onClick={handleAboutToggle}>
         {languageIsEn ? 'About' : 'Об игре'}
       </Button>
       <Modal
         aria-labelledby="spring-modal-title"
         aria-describedby="spring-modal-description"
         className={classes.modal}
-        open={open}
-        onClose={handleClose}
+        open={aboutIsOpen}
+        onClose={handleAboutToggle}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={aboutIsOpen}>
           <div className={classes.paper}>
             <Typography paragraph variant="h4" component="div">
               {languageIsEn ? 'About' : 'Об игре'}
@@ -56,20 +53,20 @@ const About: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
               {languageIsEn ? 'Hotkeys' : 'Горячие клавиши'}
             </Typography>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
-                <div className={classes.hotkey}>
+              <Grid item container xs={3} justify="center">
+                <Grid item className={classes.hotkey}>
                   <KeyboardArrowDown />
-                </div>
-                <div className={classes.hotkey}>
+                </Grid>
+                <Grid item className={classes.hotkey}>
                   <Typography variant="h6">S</Typography>
-                </div>
+                </Grid>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Move down' : 'Переместить вниз'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <KeyboardArrowUp />
                 </div>
@@ -77,12 +74,12 @@ const About: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
                   <Typography variant="h6">W</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Move up' : 'Переместить вверх'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <KeyboardArrowRight />
                 </div>
@@ -90,12 +87,12 @@ const About: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
                   <Typography variant="h6">D</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Move right' : 'Переместить вправо'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <KeyboardArrowLeft />
                 </div>
@@ -103,50 +100,55 @@ const About: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
                   <Typography variant="h6">A</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Move left' : 'Переместить влево'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <Typography variant="h6">N</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'New game' : 'Новая игра'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <Typography variant="h6">G</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Score' : 'Результаты'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <Typography variant="h6">T</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Settings' : 'Настройки'}</Typography>
               </Grid>
             </Grid>
             <Grid container className={classes.gridElement}>
-              <Grid container xs={3} justify="center">
+              <Grid item container xs={3} justify="center">
                 <div className={classes.hotkey}>
                   <Typography variant="h6">P</Typography>
                 </div>
               </Grid>
-              <Grid container xs={9} alignItems="center">
+              <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Pause' : 'Пауза'}</Typography>
               </Grid>
             </Grid>
+            <DialogActions>
+              <Button onClick={handleAboutToggle} color="primary">
+                Close
+              </Button>
+            </DialogActions>
           </div>
         </Fade>
       </Modal>

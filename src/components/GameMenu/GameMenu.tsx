@@ -1,41 +1,57 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 import './style.scss'
-import { getInitialData } from '@helpers/getInitialData'
-import { GameDataType } from '../../types/types.'
-import { INITIAL_MOVES } from '../../constants'
 import About from '@components/About/About'
 import Score from '@components/Score/Score'
+import Settings from '@components/Settings/Settings'
 
 type PropTypes = {
-  setGameData: (initialData: GameDataType) => void
-  // addRandomValue: (gameData: GameDataType) => void
   fieldSize: number
+  setFieldSize: (fieldSize: number) => void
   onSetPause: () => void
   languageIsEn: boolean
+  resetGame: () => void
+  aboutIsOpen: boolean
+  setAboutOpen: (aboutIsOpen: boolean) => void
+  settingsIsOpen: boolean
+  setSettingsOpen: (settingsIsOpen: boolean) => void
+  initField: () => void
+  setResetGame: (gameIsReset: boolean) => void
 }
 
-const GameMenu: React.FC<PropTypes> = ({ setGameData, fieldSize, onSetPause, languageIsEn }): JSX.Element => {
-  // const newGame = () => {
-  //   const initialData = getInitialData(fieldSize)
-  //
-  //   for (let i = 0; i < INITIAL_MOVES; i += 1) {
-  //     addRandomValue(initialData)
-  //   }
-  //
-  //   setGameData(initialData)
-  // }
+const GameMenu: React.FC<PropTypes> = ({
+  fieldSize,
+  setFieldSize,
+  onSetPause,
+  languageIsEn,
+  resetGame,
+  aboutIsOpen,
+  setAboutOpen,
+  settingsIsOpen,
+  setSettingsOpen,
+  initField,
+  setResetGame,
+}): JSX.Element => {
+  const onResetGame = () => {
+    setResetGame(true)
+  }
 
   return (
     <div className="menu-wrapper">
-      <Button variant="contained" color="primary">
+      <Button variant="contained" color="primary" onClick={onResetGame}>
         {languageIsEn ? 'New game' : 'Новая игра'}
       </Button>
-      <About languageIsEn={languageIsEn} />
+      <About languageIsEn={languageIsEn} aboutIsOpen={aboutIsOpen} setAboutOpen={setAboutOpen} />
       <Score languageIsEn={languageIsEn} />
-      <Button variant="contained" color="primary">
-        Settings
-      </Button>
+      <Settings
+        fieldSize={fieldSize}
+        setFieldSize={setFieldSize}
+        languageIsEn={languageIsEn}
+        settingsIsOpen={settingsIsOpen}
+        setSettingsOpen={setSettingsOpen}
+        resetGame={resetGame}
+        initField={initField}
+      />
       <Button variant="contained" color="primary" onClick={onSetPause}>
         Pause
       </Button>
