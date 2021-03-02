@@ -1,6 +1,6 @@
 import useStyles from '@components/About/style'
 import React, { useState } from 'react'
-import { Backdrop, Button, Fade, Modal, Typography } from '@material-ui/core'
+import { Backdrop, Button, Fade, Modal } from '@material-ui/core'
 
 type PropTypes = {
   languageIsEn: boolean
