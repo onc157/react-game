@@ -2,7 +2,14 @@ import { GameDataType } from '../types/types.'
 import { getCopyOfArray } from '../helpers/getCopyOfArray'
 import updateScoreValues from '../helpers/updateScoreValues'
 
-const swipeLeft = (copyData: GameDataType, fieldSize: number, maxValue: number, dispatch: any, gameIsContinue: boolean): GameDataType => {
+const swipeLeft = (
+  copyData: GameDataType,
+  fieldSize: number,
+  globalScoreValue: number,
+  maxValue: number,
+  dispatch: any,
+  gameIsContinue: boolean,
+): GameDataType => {
   const newData = getCopyOfArray(copyData)
 
   for (let i = 0; i < fieldSize; i += 1) {
@@ -27,7 +34,7 @@ const swipeLeft = (copyData: GameDataType, fieldSize: number, maxValue: number, 
       } else if (row[prevIndex] !== 0 && row[currentIndex] !== 0) {
         if (row[prevIndex] === row[currentIndex]) {
           row[prevIndex] = row[prevIndex] + row[currentIndex]
-          updateScoreValues(row[prevIndex], maxValue, dispatch, gameIsContinue)
+          updateScoreValues(row[prevIndex], globalScoreValue, maxValue, dispatch, gameIsContinue)
           row[currentIndex] = 0
           currentIndex = prevIndex + 1
           prevIndex += 1

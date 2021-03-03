@@ -124,7 +124,7 @@ const Game = (): JSX.Element => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        newData = swipeLeft(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
+        newData = swipeLeft(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -132,7 +132,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        newData = swipeRight(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
+        newData = swipeRight(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -140,7 +140,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        newData = swipeUp(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
+        newData = swipeUp(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -148,7 +148,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
-        newData = swipeDown(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
+        newData = swipeDown(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }

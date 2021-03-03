@@ -147,10 +147,13 @@ const reducer = (state: StateType, action: any): StateType => {
         }
       }
     case SET_GLOBAL_SCORE:
-      return {
-        ...state,
-        globalScoreValue: state.globalScoreValue + action.globalScoreValue,
+      if (state.scoreValue >= state.globalScoreValue) {
+        return {
+          ...state,
+          globalScoreValue: state.scoreValue,
+        }
       }
+      return state
     case SET_SCORE_DATA:
       // eslint-disable-next-line no-case-declarations
       const value = action.scoreForLocal
