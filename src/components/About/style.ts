@@ -32,6 +32,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       borderRadius: '15px',
+      padding: '5px 10px',
+      minWidth: '80px',
     },
     closeButton: {
       color: '#D0A9FF',

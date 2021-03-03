@@ -21,7 +21,9 @@ const GameField: React.FC<PropTypes> = ({ cellsValue, state }): JSX.Element => {
   return (
     <div className="field-wrapper">
       {fieldCells}
-      <div className={!state.isPause ? 'pause-wrapper' : 'pause-wrapper pause-wrapper--active'}>Pause On</div>
+      <div className={!state.isPause ? 'pause-wrapper' : 'pause-wrapper pause-wrapper--active'}>
+        {state.languageIsEn ? 'Pause On:' : 'Пауза'}
+      </div>
     </div>
   )
 }

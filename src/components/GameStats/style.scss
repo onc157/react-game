@@ -3,4 +3,24 @@
   justify-content: space-between;
 
   margin: 20px 0;
+
+  .stats__cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 15px;
+    background: #325376;
+    box-shadow: inset 5px 5px 10px #2b4764,
+    inset -5px -5px 10px #3a5f88;
+    color: #fff;
+    font-family: Arial, serif;
+    font-weight: 400;
+  }
+
+  .stats__cell:not(:first-child) {
+    margin-left: 5px;
+  }
 }
