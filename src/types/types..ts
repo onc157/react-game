@@ -1,6 +1,6 @@
 export type GameDataType = number[][]
 
-export type InitialStateType = {
+export type StateType = {
   fieldSize: number
   gameData: GameDataType
   initTime: Date
@@ -15,4 +15,6 @@ export type InitialStateType = {
   settingsIsOpen: boolean
   gameIsReset: boolean
   maxValue: number
+  scoreValue: number
+  globalScoreValue: number
 }

@@ -5,7 +5,7 @@ import GameField from '../GameField/GameField'
 import './style.scss'
 import { getRandomFieldValue } from '@helpers/getRandomFieldValue'
 import { getInitialData } from '@helpers/getInitialData'
-import { GameDataType } from '../../types/types.'
+import { GameDataType, StateType } from '../../types/types.'
 import _ from 'lodash'
 import { isIdenticalArrays } from '@helpers/isIdenticalArrays'
 import swipeLeft from '../../utils/swipeLeft'
@@ -15,12 +15,16 @@ import swipeDown from '../../utils/swipeDown'
 import { INITIAL_MOVES, KEYS } from '../../constants'
 import reducer, {
   initialState,
+  setFetchData,
   setGameData,
+  setGlobalScore,
   setInitTime,
+  setMaxValue,
   setNowTime,
   setPause,
   setPauseDelay,
   setResetGame,
+  setScore,
   setStartGame,
   setStartPauseDelay,
 } from '../../reducer'
@@ -64,22 +68,44 @@ const Game = (): JSX.Element => {
   }
 
   const resetGame = () => {
+    localStorage.removeItem('state')
     dispatch(setPauseDelay(0))
     dispatch(setInitTime(new Date()))
     dispatch(setNowTime(new Date(new Date().getTime() - new Date().getTime())))
+    dispatch(setMaxValue(0))
+    dispatch(setScore(0))
+    dispatch(setMaxValue(0))
   }
 
   useEffect(() => {
     // check LocalStorage
-    initField()
+    if (localStorage.state) {
+      const fetchData = JSON.parse(localStorage.state)
+      dispatch(setFetchData(fetchData))
+    } else {
+      initField()
+    }
+
+    // return () => setLocalStorage(state)
   }, [state.fieldSize, state.gameIsReset])
 
   const setTimer = () => {
     if (!state.isPause) {
+      // console.log(new Date().getTime())
       const diffTime = new Date().getTime() - state.initTime.getTime() - state.pauseDelay
       dispatch(setNowTime(new Date(diffTime)))
     }
   }
+
+  const setLocalStorage = () => {
+    const fetchData = { ...state }
+    localStorage.setItem('state', JSON.stringify(fetchData))
+  }
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', setLocalStorage)
+    return () => window.removeEventListener('beforeunload', setLocalStorage)
+  })
 
   useEffect(() => {
     const updateTimeInterval = setInterval(() => setTimer(), 1000)

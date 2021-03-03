@@ -15,13 +15,13 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core'
-import { InitialStateType } from '../../types/types.'
+import { StateType } from '../../types/types.'
 import { setFieldSize, setSettingsOpen } from '../../reducer'
 
 type PropTypes = {
   resetGame: () => void
   initField: () => void
-  state: InitialStateType
+  state: StateType
   dispatch: any
 }
 

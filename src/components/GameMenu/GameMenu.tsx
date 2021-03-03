@@ -4,7 +4,7 @@ import './style.scss'
 import About from '@components/About/About'
 import Score from '@components/Score/Score'
 import Settings from '@components/Settings/Settings'
-import { InitialStateType } from '../../types/types.'
+import { StateType } from '../../types/types.'
 import { setResetGame } from '../../reducer'
 import useStyles from '@components/GameMenu/style'
 
@@ -12,7 +12,7 @@ type PropTypes = {
   onSetPause: () => void
   resetGame: () => void
   initField: () => void
-  state: InitialStateType
+  state: StateType
   dispatch: any
 }
 
@@ -21,6 +21,7 @@ const GameMenu: React.FC<PropTypes> = ({ onSetPause, resetGame, initField, state
 
   const onResetGame = () => {
     dispatch(setResetGame(true))
+    resetGame()
   }
 
   return (

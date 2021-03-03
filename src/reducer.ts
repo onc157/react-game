@@ -1,4 +1,4 @@
-import { GameDataType, InitialStateType } from './types/types.'
+import { GameDataType, StateType } from './types/types.'
 
 const SET_FIELD_SIZE = 'SET_FIELD_SIZE'
 const SET_GAME_DATA = 'SET_GAME_DATA'
@@ -14,8 +14,11 @@ const SET_ABOUT_OPEN = 'SET_ABOUT_OPEN'
 const SET_SETTINGS_OPEN = 'SET_SETTINGS_OPEN'
 const SET_RESET_GAME = 'SET_RESET_GAME'
 const SET_MAX_VALUE = 'SET_MAX_VALUE'
+const SET_SCORE = 'SET_SCORE'
+const SET_GLOBAL_SCORE = 'SET_GLOBAL_SCORE'
+const SET_FETCH_DATA = 'SET_FETCH_DATA'
 
-export const initialState: InitialStateType = {
+export const initialState: StateType = {
   fieldSize: 4,
   gameData: [],
   initTime: new Date(),
@@ -30,9 +33,11 @@ export const initialState: InitialStateType = {
   settingsIsOpen: false,
   gameIsReset: false,
   maxValue: 0,
+  scoreValue: 0,
+  globalScoreValue: 0,
 }
 
-const reducer = (state: InitialStateType, action: any) => {
+const reducer = (state: StateType, action: any) => {
   switch (action.type) {
     case SET_FIELD_SIZE:
       return {
@@ -104,6 +109,30 @@ const reducer = (state: InitialStateType, action: any) => {
         ...state,
         maxValue: action.maxValue,
       }
+    case SET_SCORE:
+      if (action.scoreValue === 0) {
+        return {
+          ...state,
+          scoreValue: 0,
+        }
+      } else {
+        return {
+          ...state,
+          scoreValue: state.scoreValue + action.scoreValue,
+        }
+      }
+    case SET_GLOBAL_SCORE:
+      return {
+        ...state,
+        globalScoreValue: state.globalScoreValue + action.globalScoreValue,
+      }
+    case SET_FETCH_DATA:
+      return {
+        ...state,
+        ...action.fetchData,
+        initTime: new Date(action.fetchData.initTime),
+        nowTime: new Date(action.fetchData.nowTime),
+      }
     default:
       return state
   }
@@ -123,5 +152,8 @@ export const setAboutOpen = (aboutIsOpen: boolean) => ({ type: SET_ABOUT_OPEN, a
 export const setSettingsOpen = (settingsIsOpen: boolean) => ({ type: SET_SETTINGS_OPEN, settingsIsOpen })
 export const setResetGame = (gameIsReset: boolean) => ({ type: SET_RESET_GAME, gameIsReset })
 export const setMaxValue = (maxValue: number) => ({ type: SET_MAX_VALUE, maxValue })
+export const setScore = (scoreValue: number) => ({ type: SET_SCORE, scoreValue })
+export const setGlobalScore = (globalScoreValue: number) => ({ type: SET_GLOBAL_SCORE, globalScoreValue })
+export const setFetchData = (fetchData: StateType) => ({ type: SET_FETCH_DATA, fetchData })
 
 export default reducer
