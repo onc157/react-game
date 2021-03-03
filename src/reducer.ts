@@ -1,4 +1,4 @@
-import { GameDataType, StateType } from './types/types.'
+import { GameDataType, ScoreDataType, StateType } from './types/types.'
 
 const SET_FIELD_SIZE = 'SET_FIELD_SIZE'
 const SET_GAME_DATA = 'SET_GAME_DATA'
@@ -9,13 +9,16 @@ const SET_PAUSE_DELAY = 'SET_PAUSE_DELAY'
 const SET_START_PAUSE_DELAY = 'SET_START_PAUSE_DELAY'
 const SET_LANGUAGE = 'SET_LANGUAGE'
 const SET_GAME_OVER = 'SET_GAME_OVER'
+const SET_GAME_WIN = 'SET_GAME_WIN'
 const SET_GAME_START = 'SET_GAME_START'
+const SET_GAME_CONTINUE = 'SET_GAME_CONTINUE'
 const SET_ABOUT_OPEN = 'SET_ABOUT_OPEN'
 const SET_SETTINGS_OPEN = 'SET_SETTINGS_OPEN'
 const SET_RESET_GAME = 'SET_RESET_GAME'
 const SET_MAX_VALUE = 'SET_MAX_VALUE'
 const SET_SCORE = 'SET_SCORE'
 const SET_GLOBAL_SCORE = 'SET_GLOBAL_SCORE'
+const SET_SCORE_DATA = 'SET_FETCH_SCORE'
 const SET_FETCH_DATA = 'SET_FETCH_DATA'
 
 export const initialState: StateType = {
@@ -28,13 +31,16 @@ export const initialState: StateType = {
   startPauseDelay: null,
   languageIsEn: true,
   gameIsOver: false,
+  gameIsWin: false,
   gameIsStart: false,
+  gameIsContinue: false,
   aboutIsOpen: false,
   settingsIsOpen: false,
   gameIsReset: false,
   maxValue: 0,
   scoreValue: 0,
   globalScoreValue: 0,
+  scoreData: [],
 }
 
 const reducer = (state: StateType, action: any) => {
@@ -84,10 +90,20 @@ const reducer = (state: StateType, action: any) => {
         ...state,
         gameIsOver: action.gameIsOver,
       }
+    case SET_GAME_WIN:
+      return {
+        ...state,
+        gameIsWin: action.gameIsWin,
+      }
     case SET_GAME_START:
       return {
         ...state,
         gameIsStart: action.gameIsStart,
+      }
+    case SET_GAME_CONTINUE:
+      return {
+        ...state,
+        gameIsContinue: action.gameIsContinue,
       }
     case SET_ABOUT_OPEN:
       return {
@@ -126,6 +142,25 @@ const reducer = (state: StateType, action: any) => {
         ...state,
         globalScoreValue: state.globalScoreValue + action.globalScoreValue,
       }
+    case SET_SCORE_DATA:
+      // eslint-disable-next-line no-case-declarations
+      const value = action.scoreForLocal
+      console.log(value)
+      // eslint-disable-next-line no-case-declarations
+      const time = `${state.nowTime.getMinutes()} : ${state.nowTime.getSeconds()}`
+      // eslint-disable-next-line no-case-declarations
+      const newScoreData = [...state.scoreData]
+      newScoreData.push({ scoreValue: value, time: time })
+      newScoreData.sort((a: ScoreDataType, b: ScoreDataType) => b.scoreValue - a.scoreValue)
+      if (newScoreData.length > 10) {
+        newScoreData.pop()
+      }
+
+      localStorage.setItem('scoreData', JSON.stringify(newScoreData))
+      return {
+        ...state,
+        scoreData: newScoreData,
+      }
     case SET_FETCH_DATA:
       return {
         ...state,
@@ -147,6 +182,8 @@ export const setPauseDelay = (pauseDelay: number) => ({ type: SET_PAUSE_DELAY, p
 export const setStartPauseDelay = (startPauseDelay: Date | null) => ({ type: SET_START_PAUSE_DELAY, startPauseDelay })
 export const setLanguage = (languageIsEn: boolean) => ({ type: SET_LANGUAGE, languageIsEn })
 export const setGameOver = (gameIsOver: boolean) => ({ type: SET_GAME_OVER, gameIsOver })
+export const setGameWin = (gameIsWin: boolean) => ({ type: SET_GAME_WIN, gameIsWin })
+export const setGameContinue = (gameIsContinue: boolean) => ({ type: SET_GAME_CONTINUE, gameIsContinue })
 export const setStartGame = (gameIsStart: boolean) => ({ type: SET_GAME_START, gameIsStart })
 export const setAboutOpen = (aboutIsOpen: boolean) => ({ type: SET_ABOUT_OPEN, aboutIsOpen })
 export const setSettingsOpen = (settingsIsOpen: boolean) => ({ type: SET_SETTINGS_OPEN, settingsIsOpen })
@@ -154,6 +191,7 @@ export const setResetGame = (gameIsReset: boolean) => ({ type: SET_RESET_GAME, g
 export const setMaxValue = (maxValue: number) => ({ type: SET_MAX_VALUE, maxValue })
 export const setScore = (scoreValue: number) => ({ type: SET_SCORE, scoreValue })
 export const setGlobalScore = (globalScoreValue: number) => ({ type: SET_GLOBAL_SCORE, globalScoreValue })
+export const setScoreData = (scoreForLocal: number) => ({ type: SET_SCORE_DATA, scoreForLocal })
 export const setFetchData = (fetchData: StateType) => ({ type: SET_FETCH_DATA, fetchData })
 
 export default reducer

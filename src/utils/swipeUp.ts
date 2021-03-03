@@ -1,9 +1,8 @@
 import { GameDataType } from '../types/types.'
 import { getCopyOfArray } from '@helpers/getCopyOfArray'
-import { setGlobalScore, setMaxValue, setScore } from '../reducer'
 import updateScoreValues from '@helpers/updateScoreValues'
 
-const swipeUp = (copyData: GameDataType, fieldSize: number, maxValue: number, dispatch: any): GameDataType => {
+const swipeUp = (copyData: GameDataType, fieldSize: number, maxValue: number, dispatch: any, gameIsContinue: boolean): GameDataType => {
   const newData = getCopyOfArray(copyData)
 
   for (let i = 0; i < fieldSize; i += 1) {
@@ -27,7 +26,7 @@ const swipeUp = (copyData: GameDataType, fieldSize: number, maxValue: number, di
       } else if (newData[prevIndex][i] !== 0 && newData[currentIndex][i] !== 0) {
         if (newData[prevIndex][i] === newData[currentIndex][i]) {
           newData[prevIndex][i] = newData[prevIndex][i] + newData[currentIndex][i]
-          updateScoreValues(newData[prevIndex][i], maxValue, dispatch)
+          updateScoreValues(newData[prevIndex][i], maxValue, dispatch, gameIsContinue)
           newData[currentIndex][i] = 0
           currentIndex = prevIndex + 1
           prevIndex += 1

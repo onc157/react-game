@@ -30,7 +30,7 @@ const GameMenu: React.FC<PropTypes> = ({ onSetPause, resetGame, initField, state
         {state.languageIsEn ? 'New game' : 'Новая игра'}
       </Button>
       <About languageIsEn={state.languageIsEn} aboutIsOpen={state.aboutIsOpen} dispatch={dispatch} />
-      <Score languageIsEn={state.languageIsEn} />
+      <Score languageIsEn={state.languageIsEn} state={state} dispatch={dispatch} />
       <Settings resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
       <Button className={classes.button} variant="contained" color="primary" onClick={onSetPause}>
         Pause

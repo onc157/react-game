@@ -16,7 +16,9 @@ import { INITIAL_MOVES, KEYS } from '../../constants'
 import reducer, {
   initialState,
   setFetchData,
+  setGameContinue,
   setGameData,
+  setGameOver,
   setGlobalScore,
   setInitTime,
   setMaxValue,
@@ -25,9 +27,12 @@ import reducer, {
   setPauseDelay,
   setResetGame,
   setScore,
+  setScoreData,
   setStartGame,
   setStartPauseDelay,
 } from '../../reducer'
+import Lose from '@components/Lose/Lose'
+import Win from '@components/Win/Win'
 
 const Game = (): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -45,7 +50,8 @@ const Game = (): JSX.Element => {
       }
 
       if (state.gameIsStart && !checkGameIsOver(newData)) {
-        console.log('you lose')
+        dispatch(setScoreData(state.scoreValue))
+        dispatch(setGameOver(true))
         return
       }
     }
@@ -75,6 +81,7 @@ const Game = (): JSX.Element => {
     dispatch(setMaxValue(0))
     dispatch(setScore(0))
     dispatch(setMaxValue(0))
+    dispatch(setGameContinue(false))
   }
 
   useEffect(() => {
@@ -85,8 +92,6 @@ const Game = (): JSX.Element => {
     } else {
       initField()
     }
-
-    // return () => setLocalStorage(state)
   }, [state.fieldSize, state.gameIsReset])
 
   const setTimer = () => {
@@ -118,7 +123,7 @@ const Game = (): JSX.Element => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        newData = swipeLeft(state.gameData, state.fieldSize, state.maxValue, dispatch)
+        newData = swipeLeft(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -126,7 +131,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        newData = swipeRight(state.gameData, state.fieldSize, state.maxValue, dispatch)
+        newData = swipeRight(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -134,7 +139,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        newData = swipeUp(state.gameData, state.fieldSize, state.maxValue, dispatch)
+        newData = swipeUp(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -142,7 +147,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
-        newData = swipeDown(state.gameData, state.fieldSize, state.maxValue, dispatch)
+        newData = swipeDown(state.gameData, state.fieldSize, state.maxValue, dispatch, state.gameIsContinue)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -190,6 +195,8 @@ const Game = (): JSX.Element => {
       <GameMenu onSetPause={onSetPause} resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
       <GameField cellsValue={state.gameData} />
       <GameStats state={state} />
+      <Lose resetGame={resetGame} state={state} dispatch={dispatch} />
+      <Win resetGame={resetGame} state={state} dispatch={dispatch} />
     </div>
   )
 }

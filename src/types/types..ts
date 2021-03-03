@@ -1,4 +1,8 @@
 export type GameDataType = number[][]
+export type ScoreDataType = {
+  scoreValue: number
+  time: string
+}
 
 export type StateType = {
   fieldSize: number
@@ -10,11 +14,14 @@ export type StateType = {
   startPauseDelay: Date | null
   languageIsEn: boolean
   gameIsOver: boolean
+  gameIsWin: boolean
   gameIsStart: boolean
+  gameIsContinue: boolean
   aboutIsOpen: boolean
   settingsIsOpen: boolean
   gameIsReset: boolean
   maxValue: number
   scoreValue: number
   globalScoreValue: number
+  scoreData: ScoreDataType[]
 }

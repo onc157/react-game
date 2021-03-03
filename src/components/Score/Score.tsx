@@ -1,12 +1,28 @@
 import useStyles from '@components/Score/style'
 import React, { useState } from 'react'
-import { Backdrop, Button, Fade, Modal } from '@material-ui/core'
+import {
+  Backdrop,
+  Button,
+  Fade,
+  Modal,
+  TableContainer,
+  Typography,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+} from '@material-ui/core'
+import { ScoreDataType, StateType } from '../../types/types.'
 
 type PropTypes = {
   languageIsEn: boolean
+  state: StateType
+  dispatch: any
 }
 
-const Score: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
+const Score: React.FC<PropTypes> = ({ languageIsEn, state, dispatch }): JSX.Element => {
   const classes = useStyles()
   const [open, setOpen] = useState(false)
 
@@ -37,8 +53,29 @@ const Score: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="spring-modal-title">Spring modal</h2>
-            <p id="spring-modal-description">react-spring animates me.</p>
+            <Typography paragraph variant="h4" component="div">
+              {state.languageIsEn ? 'Score' : 'Результаты'}
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table className={classes.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">{state.languageIsEn ? '#' : '№'}</TableCell>
+                    <TableCell align="center">{state.languageIsEn ? 'Score' : 'Очки'}</TableCell>
+                    <TableCell align="center">{state.languageIsEn ? 'Time' : 'Время'}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {state.scoreData.map((row: ScoreDataType, i: number) => (
+                    <TableRow key={i}>
+                      <TableCell align="center">{i + 1}</TableCell>
+                      <TableCell align="center">{row.scoreValue}</TableCell>
+                      <TableCell align="center">{row.time}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </div>
         </Fade>
       </Modal>

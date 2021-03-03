@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       borderRadius: '15px',
     },
+    table: {
+      minWidth: 650,
+    },
   }),
 )
 
