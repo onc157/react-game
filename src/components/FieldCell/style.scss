@@ -6,41 +6,61 @@
   margin: 5px;
   width: 100%;
   height: 100%;
-  background-color: darkgray;
+  background-color: rgba(0, 0, 0, .3);
+  color: rgba(255, 255, 255, .4);
 
   border-radius: 15px;
 
   .cell__number {
     font-size: 30px;
-    color: #f5f8fa;
+    //color: #f5f8fa;
   }
 }
 
 .cell__active {
-  background-color: #1da1f2;
+  //background-color: #1da1f2;
+  color: #f5f8fa;
 }
 
-.cell-new {
-  -webkit-animation-duration: 0.2s;
-  animation-duration: 0.2s;
-  -webkit-animation-name: newTile;
-  animation-name: newTile;
-  -webkit-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
-  -webkit-animation-delay: 0.15s;
-  animation-delay: 0.15s;
-  -webkit-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
+.cell--2 {
+  background-color: #515EB7;
 }
-
-@keyframes newTile {
-  from {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-  }
-  to {
-    -webkit-transform: scale(1);
-    transform: scale(1);
-  }
+.cell--4 {
+  background-color: #F46859;
+}
+.cell--8 {
+  background-color: #39DEB6;
+}
+.cell--16 {
+  background-color: #1DBE1A;
+}
+.cell--32 {
+  background-color: #AD1378;
+}
+.cell--64 {
+  background-color: #FC97D5;
+}
+.cell--128 {
+  background-color: #F11D24;
+}
+.cell--256 {
+  background-color: #919620;
+}
+.cell--512 {
+  background-color: #FF00AE;
+}
+.cell--1024 {
+  background-color: #A0FB8C;
+}
+.cell--2048 {
+  background-color: #328CA4;
+}
+.cell--4096 {
+  background-color: #00680F;
+}
+.cell--8192{
+  background-color: #002499;
+}
+.cell--16384 {
+  background-color: #990000;
 }

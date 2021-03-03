@@ -9,7 +9,9 @@
   padding: 5px 0;
   border-radius: 15px;
 
-  background-color: bisque;
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+  box-shadow: inset 11px 11px 22px #21435a,
+  inset -11px -11px 22px #615392;
 
   .field__row {
     display: flex;
