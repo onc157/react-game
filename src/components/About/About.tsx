@@ -2,18 +2,19 @@ import useStyles from '@components/About/style'
 import React from 'react'
 import { Backdrop, Button, DialogActions, Fade, Grid, Modal, PropTypes, Typography } from '@material-ui/core'
 import { KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp } from '@material-ui/icons'
+import { setAboutOpen } from '../../reducer'
 
 type PropTypes = {
   languageIsEn: boolean
   aboutIsOpen: boolean
-  setAboutOpen: (aboutIsOpen: boolean) => void
+  dispatch: any
 }
 
-const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, setAboutOpen }): JSX.Element => {
+const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, dispatch }): JSX.Element => {
   const classes = useStyles()
 
   const handleAboutToggle = () => {
-    setAboutOpen(!aboutIsOpen)
+    dispatch(setAboutOpen(!aboutIsOpen))
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import GameMenu from '../GameMenu/GameMenu'
 import GameStats from '../GameStats/GameStats'
 import GameField from '../GameField/GameField'
@@ -13,35 +13,49 @@ import swipeRight from '../../utils/swipeRight'
 import swipeUp from '../../utils/swipeUp'
 import swipeDown from '../../utils/swipeDown'
 import { INITIAL_MOVES, KEYS } from '../../constants'
+import reducer, {
+  initialState,
+  setGameData,
+  setInitTime,
+  setNowTime,
+  setPause,
+  setPauseDelay,
+  setResetGame,
+  setStartGame,
+  setStartPauseDelay,
+} from '../../reducer'
+import { stat } from 'fs'
 
 const Game = (): JSX.Element => {
-  const [fieldSize, setFieldSize] = useState<number>(4)
-  const [gameData, setGameData] = useState<GameDataType>(getInitialData(fieldSize))
-  const [initTime, setInitTime] = useState(new Date())
-  const [nowTime, setNowTime] = useState<Date>(new Date(new Date().getTime() - new Date().getTime()))
-  const [isPause, setPause] = useState(false)
-  const [pauseDelay, setPauseDelay] = useState(0)
-  const [startPauseDelay, setStartPauseDelay] = useState<Date | undefined>()
-  const [languageIsEn, setLanguage] = useState(true)
-  const [gameIsOver, setGameOver] = useState(false)
-  const [gameIsStart, setStartGame] = useState(false)
-  const [aboutIsOpen, setAboutOpen] = useState(false)
-  const [settingsIsOpen, setSettingsOpen] = useState(false)
-  const [gameIsReset, setResetGame] = useState(false)
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  // const [fieldSize, setFieldSize] = useState<number>(4)
+  // const [gameData, setGameData] = useState<GameDataType>(getInitialData(state.fieldSize))
+  // const [initTime, setInitTime] = useState(new Date())
+  // const [nowTime, setNowTime] = useState<Date>(new Date(new Date().getTime() - new Date().getTime()))
+  // const [isPause, setPause] = useState(false)
+  // const [pauseDelay, setPauseDelay] = useState(0)
+  // const [startPauseDelay, setStartPauseDelay] = useState<Date | undefined>()
+  // const [languageIsEn, setLanguage] = useState(true)
+  // const [gameIsOver, setGameOver] = useState(false)
+  // const [gameIsStart, setStartGame] = useState(false)
+  // const [aboutIsOpen, setAboutOpen] = useState(false)
+  // const [settingsIsOpen, setSettingsOpen] = useState(false)
+  // const [gameIsReset, setResetGame] = useState(false)
 
   const addRandomValue = (newData: GameDataType) => {
     let isAdded = false
 
     while (!isAdded) {
-      const getRandomRow = _.random(fieldSize - 1)
-      const getRandomColumn = _.random(fieldSize - 1)
+      const getRandomRow = _.random(state.fieldSize - 1)
+      const getRandomColumn = _.random(state.fieldSize - 1)
 
       if (newData[getRandomRow][getRandomColumn] === 0) {
         newData[getRandomRow][getRandomColumn] = getRandomFieldValue()
         isAdded = true
       }
 
-      if (gameIsStart && !checkGameIsOver(newData)) {
+      if (state.gameIsStart && !checkGameIsOver(newData)) {
         console.log('you lose')
         return
       }
@@ -49,43 +63,43 @@ const Game = (): JSX.Element => {
   }
 
   const initField = () => {
-    const initialData = getInitialData(fieldSize)
+    const initialData = getInitialData(state.fieldSize)
 
     for (let i = 0; i < INITIAL_MOVES; i += 1) {
       addRandomValue(initialData)
     }
 
-    if (gameIsStart) {
-      setResetGame(false)
+    if (state.gameIsStart) {
+      dispatch(setResetGame(false))
       resetGame()
     }
 
-    setStartGame(true)
-    setGameData(initialData)
+    dispatch(setStartGame(true))
+    dispatch(setGameData(initialData))
   }
 
   const resetGame = () => {
-    setPauseDelay(0)
-    setInitTime(new Date())
-    setNowTime(new Date(new Date().getTime() - new Date().getTime()))
+    dispatch(setPauseDelay(0))
+    dispatch(setInitTime(new Date()))
+    dispatch(setNowTime(new Date(new Date().getTime() - new Date().getTime())))
   }
 
   useEffect(() => {
     // check LocalStorage
     initField()
-  }, [fieldSize, gameIsReset])
+  }, [state.fieldSize, state.gameIsReset])
 
   const setTimer = () => {
-    if (!isPause) {
-      const diffTime = new Date().getTime() - initTime.getTime() - pauseDelay
-      setNowTime(new Date(diffTime))
+    if (!state.isPause) {
+      const diffTime = new Date().getTime() - state.initTime.getTime() - state.pauseDelay
+      dispatch(setNowTime(new Date(diffTime)))
     }
   }
 
   useEffect(() => {
     const updateTimeInterval = setInterval(() => setTimer(), 1000)
     return () => clearInterval(updateTimeInterval)
-  }, [isPause, pauseDelay, startPauseDelay, resetGame])
+  }, [state.isPause, state.pauseDelay, state.startPauseDelay, resetGame])
 
   const handleKeydown = (e: KeyboardEvent) => {
     let newData = []
@@ -93,35 +107,35 @@ const Game = (): JSX.Element => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        newData = swipeLeft(gameData, fieldSize)
-        if (!isIdenticalArrays(gameData, newData)) {
+        newData = swipeLeft(state.gameData, state.fieldSize)
+        if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
-        setGameData(newData)
+        dispatch(setGameData(newData))
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        newData = swipeRight(gameData, fieldSize)
-        if (!isIdenticalArrays(gameData, newData)) {
+        newData = swipeRight(state.gameData, state.fieldSize)
+        if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
-        setGameData(newData)
+        dispatch(setGameData(newData))
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        newData = swipeUp(gameData, fieldSize)
-        if (!isIdenticalArrays(gameData, newData)) {
+        newData = swipeUp(state.gameData, state.fieldSize)
+        if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
-        setGameData(newData)
+        dispatch(setGameData(newData))
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
-        newData = swipeDown(gameData, fieldSize)
-        if (!isIdenticalArrays(gameData, newData)) {
+        newData = swipeDown(state.gameData, state.fieldSize)
+        if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
-        setGameData(newData)
+        dispatch(setGameData(newData))
         break
       default:
         break
@@ -134,20 +148,20 @@ const Game = (): JSX.Element => {
   })
 
   const onSetPause = () => {
-    if (!isPause) {
-      setStartPauseDelay(new Date())
-      setPause(!isPause)
+    if (!state.isPause) {
+      dispatch(setStartPauseDelay(new Date()))
+      dispatch(setPause(!state.isPause))
     } else {
-      const pause = new Date().getTime() - startPauseDelay!.getTime()
-      setPauseDelay(pauseDelay + pause)
-      setPause(!isPause)
+      const pause = new Date().getTime() - state.startPauseDelay!.getTime()
+      dispatch(setPauseDelay(state.pauseDelay + pause))
+      dispatch(setPause(!state.isPause))
     }
   }
 
   const checkGameIsOver = (newData: GameDataType): boolean => {
     if (newData.flat().every(cell => cell !== 0)) {
-      for (let i = 0; i < fieldSize; i += 1) {
-        for (let j = 0; j < fieldSize - 1; j += 1) {
+      for (let i = 0; i < state.fieldSize; i += 1) {
+        for (let j = 0; j < state.fieldSize - 1; j += 1) {
           if (newData[i][j] === newData[i][j + 1]) {
             return true
           } else if (newData[j][i] === newData[j + 1][i]) {
@@ -162,21 +176,9 @@ const Game = (): JSX.Element => {
 
   return (
     <div className="game-wrapper">
-      <GameMenu
-        fieldSize={fieldSize}
-        setFieldSize={setFieldSize}
-        onSetPause={onSetPause}
-        languageIsEn={languageIsEn}
-        resetGame={resetGame}
-        aboutIsOpen={aboutIsOpen}
-        setAboutOpen={setAboutOpen}
-        settingsIsOpen={settingsIsOpen}
-        setSettingsOpen={setSettingsOpen}
-        initField={initField}
-        setResetGame={setResetGame}
-      />
-      <GameStats nowTime={nowTime} />
-      <GameField cellsValue={gameData} />
+      <GameMenu onSetPause={onSetPause} resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
+      <GameStats nowTime={state.nowTime} />
+      <GameField cellsValue={state.gameData} />
     </div>
   )
 }

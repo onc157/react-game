@@ -4,54 +4,30 @@ import './style.scss'
 import About from '@components/About/About'
 import Score from '@components/Score/Score'
 import Settings from '@components/Settings/Settings'
+import { InitialStateType } from '../../types/types.'
+import { setResetGame } from '../../reducer'
 
 type PropTypes = {
-  fieldSize: number
-  setFieldSize: (fieldSize: number) => void
   onSetPause: () => void
-  languageIsEn: boolean
   resetGame: () => void
-  aboutIsOpen: boolean
-  setAboutOpen: (aboutIsOpen: boolean) => void
-  settingsIsOpen: boolean
-  setSettingsOpen: (settingsIsOpen: boolean) => void
   initField: () => void
-  setResetGame: (gameIsReset: boolean) => void
+  state: InitialStateType
+  dispatch: any
 }
 
-const GameMenu: React.FC<PropTypes> = ({
-  fieldSize,
-  setFieldSize,
-  onSetPause,
-  languageIsEn,
-  resetGame,
-  aboutIsOpen,
-  setAboutOpen,
-  settingsIsOpen,
-  setSettingsOpen,
-  initField,
-  setResetGame,
-}): JSX.Element => {
+const GameMenu: React.FC<PropTypes> = ({ onSetPause, resetGame, initField, state, dispatch }): JSX.Element => {
   const onResetGame = () => {
-    setResetGame(true)
+    dispatch(setResetGame(true))
   }
 
   return (
     <div className="menu-wrapper">
       <Button variant="contained" color="primary" onClick={onResetGame}>
-        {languageIsEn ? 'New game' : 'Новая игра'}
+        {state.languageIsEn ? 'New game' : 'Новая игра'}
       </Button>
-      <About languageIsEn={languageIsEn} aboutIsOpen={aboutIsOpen} setAboutOpen={setAboutOpen} />
-      <Score languageIsEn={languageIsEn} />
-      <Settings
-        fieldSize={fieldSize}
-        setFieldSize={setFieldSize}
-        languageIsEn={languageIsEn}
-        settingsIsOpen={settingsIsOpen}
-        setSettingsOpen={setSettingsOpen}
-        resetGame={resetGame}
-        initField={initField}
-      />
+      <About languageIsEn={state.languageIsEn} aboutIsOpen={state.aboutIsOpen} dispatch={dispatch} />
+      <Score languageIsEn={state.languageIsEn} />
+      <Settings resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
       <Button variant="contained" color="primary" onClick={onSetPause}>
         Pause
       </Button>
