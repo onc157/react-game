@@ -18,6 +18,7 @@ export type StateType = {
   gameIsStart: boolean
   gameIsContinue: boolean
   aboutIsOpen: boolean
+  scoreIsOpen: boolean
   settingsIsOpen: boolean
   gameIsReset: boolean
   maxValue: number

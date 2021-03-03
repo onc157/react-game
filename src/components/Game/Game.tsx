@@ -28,6 +28,8 @@ import reducer, {
   setResetGame,
   setScore,
   setScoreData,
+  setScoreOpen,
+  setSettingsOpen,
   setStartGame,
   setStartPauseDelay,
 } from '../../reducer'
@@ -38,6 +40,7 @@ const Game = (): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const addRandomValue = (newData: GameDataType) => {
+    if (state.isPause) onSetPause()
     let isAdded = false
 
     while (!isAdded) {
@@ -153,6 +156,19 @@ const Game = (): JSX.Element => {
         }
         dispatch(setGameData(newData))
         break
+      case KEYS.KEY_N:
+        resetGame()
+        dispatch(setResetGame(true))
+        break
+      case KEYS.KEY_G:
+        dispatch(setScoreOpen(!state.scoreIsOpen))
+        break
+      case KEYS.KEY_T:
+        dispatch(setSettingsOpen(!state.settingsIsOpen))
+        break
+      case KEYS.KEY_P:
+        onSetPause()
+        break
       default:
         break
     }
@@ -193,7 +209,7 @@ const Game = (): JSX.Element => {
   return (
     <div className="game-wrapper">
       <GameMenu onSetPause={onSetPause} resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
-      <GameField cellsValue={state.gameData} />
+      <GameField cellsValue={state.gameData} state={state} />
       <GameStats state={state} />
       <Lose resetGame={resetGame} state={state} dispatch={dispatch} />
       <Win resetGame={resetGame} state={state} dispatch={dispatch} />

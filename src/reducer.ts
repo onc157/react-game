@@ -14,6 +14,7 @@ const SET_GAME_START = 'SET_GAME_START'
 const SET_GAME_CONTINUE = 'SET_GAME_CONTINUE'
 const SET_ABOUT_OPEN = 'SET_ABOUT_OPEN'
 const SET_SETTINGS_OPEN = 'SET_SETTINGS_OPEN'
+const SET_SCORE_OPEN = 'SET_SCORE_OPEN'
 const SET_RESET_GAME = 'SET_RESET_GAME'
 const SET_MAX_VALUE = 'SET_MAX_VALUE'
 const SET_SCORE = 'SET_SCORE'
@@ -35,6 +36,7 @@ export const initialState: StateType = {
   gameIsStart: false,
   gameIsContinue: false,
   aboutIsOpen: false,
+  scoreIsOpen: false,
   settingsIsOpen: false,
   gameIsReset: false,
   maxValue: 0,
@@ -109,6 +111,11 @@ const reducer = (state: StateType, action: any) => {
       return {
         ...state,
         aboutIsOpen: action.aboutIsOpen,
+      }
+    case SET_SCORE_OPEN:
+      return {
+        ...state,
+        scoreIsOpen: action.scoreIsOpen,
       }
     case SET_SETTINGS_OPEN:
       return {
@@ -186,6 +193,7 @@ export const setGameWin = (gameIsWin: boolean) => ({ type: SET_GAME_WIN, gameIsW
 export const setGameContinue = (gameIsContinue: boolean) => ({ type: SET_GAME_CONTINUE, gameIsContinue })
 export const setStartGame = (gameIsStart: boolean) => ({ type: SET_GAME_START, gameIsStart })
 export const setAboutOpen = (aboutIsOpen: boolean) => ({ type: SET_ABOUT_OPEN, aboutIsOpen })
+export const setScoreOpen = (scoreIsOpen: boolean) => ({ type: SET_SCORE_OPEN, scoreIsOpen })
 export const setSettingsOpen = (settingsIsOpen: boolean) => ({ type: SET_SETTINGS_OPEN, settingsIsOpen })
 export const setResetGame = (gameIsReset: boolean) => ({ type: SET_RESET_GAME, gameIsReset })
 export const setMaxValue = (maxValue: number) => ({ type: SET_MAX_VALUE, maxValue })

@@ -10,4 +10,7 @@ export const KEYS = {
   KEY_S: 'KeyS',
   KEY_D: 'KeyD',
   KEY_N: 'KeyN',
+  KEY_G: 'KeyG',
+  KEY_T: 'KeyT',
+  KEY_P: 'KeyP',
 }

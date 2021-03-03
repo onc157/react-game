@@ -1,5 +1,5 @@
 import useStyles from '@components/Score/style'
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Backdrop,
   Button,
@@ -13,8 +13,10 @@ import {
   TableCell,
   TableBody,
   Paper,
+  DialogActions,
 } from '@material-ui/core'
 import { ScoreDataType, StateType } from '../../types/types.'
+import { setScoreOpen } from '../../reducer'
 
 type PropTypes = {
   languageIsEn: boolean
@@ -24,34 +26,29 @@ type PropTypes = {
 
 const Score: React.FC<PropTypes> = ({ languageIsEn, state, dispatch }): JSX.Element => {
   const classes = useStyles()
-  const [open, setOpen] = useState(false)
 
-  const handleOpen = () => {
-    setOpen(true)
-  }
-
-  const handleClose = () => {
-    setOpen(false)
+  const handleScoreToggle = () => {
+    dispatch(setScoreOpen(!state.scoreIsOpen))
   }
 
   return (
     <div>
-      <Button className={classes.button} variant="contained" color="primary" onClick={handleOpen}>
+      <Button className={classes.button} variant="contained" color="primary" onClick={handleScoreToggle}>
         {languageIsEn ? 'Score' : 'Результаты'}
       </Button>
       <Modal
         aria-labelledby="spring-modal-title"
         aria-describedby="spring-modal-description"
         className={classes.modal}
-        open={open}
-        onClose={handleClose}
+        open={state.scoreIsOpen}
+        onClose={handleScoreToggle}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={state.scoreIsOpen}>
           <div className={classes.paper}>
             <Typography paragraph variant="h4" component="div">
               {state.languageIsEn ? 'Score' : 'Результаты'}
@@ -76,6 +73,12 @@ const Score: React.FC<PropTypes> = ({ languageIsEn, state, dispatch }): JSX.Elem
                 </TableBody>
               </Table>
             </TableContainer>
+
+            <DialogActions>
+              <Button className={classes.closeButton} onClick={handleScoreToggle} color="primary">
+                Close
+              </Button>
+            </DialogActions>
           </div>
         </Fade>
       </Modal>

@@ -8,13 +8,13 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
     },
     paper: {
-      // backgroundColor: theme.palette.background.paper,
       backgroundImage: 'linear-gradient(-20deg, #2b5876 0%, #4e4376 100%)',
       boxShadow: theme.shadows[5],
       padding: theme.spacing(2, 4, 3),
       maxWidth: '600px',
       borderRadius: '15px',
       color: '#FFF',
+      outline: 'none',
     },
     gridElement: {
       margin: '10px 0',
