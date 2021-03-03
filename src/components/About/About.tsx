@@ -19,7 +19,7 @@ const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, dispatch }): JS
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleAboutToggle}>
+      <Button className={classes.button} variant="contained" color="primary" onClick={handleAboutToggle}>
         {languageIsEn ? 'About' : 'Об игре'}
       </Button>
       <Modal
@@ -146,7 +146,7 @@ const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, dispatch }): JS
               </Grid>
             </Grid>
             <DialogActions>
-              <Button onClick={handleAboutToggle} color="primary">
+              <Button className={classes.closeButton} onClick={handleAboutToggle} color="primary">
                 Close
               </Button>
             </DialogActions>

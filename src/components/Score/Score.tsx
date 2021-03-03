@@ -1,4 +1,4 @@
-import useStyles from '@components/About/style'
+import useStyles from '@components/Score/style'
 import React, { useState } from 'react'
 import { Backdrop, Button, Fade, Modal } from '@material-ui/core'
 
@@ -20,7 +20,7 @@ const Score: React.FC<PropTypes> = ({ languageIsEn }): JSX.Element => {
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <Button className={classes.button} variant="contained" color="primary" onClick={handleOpen}>
         {languageIsEn ? 'Score' : 'Результаты'}
       </Button>
       <Modal

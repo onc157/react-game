@@ -162,8 +162,8 @@ const Game = (): JSX.Element => {
   return (
     <div className="game-wrapper">
       <GameMenu onSetPause={onSetPause} resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
-      <GameStats state={state} />
       <GameField cellsValue={state.gameData} />
+      <GameStats state={state} />
     </div>
   )
 }

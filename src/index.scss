@@ -1,8 +1,19 @@
 @import 'assets/stylesheets/common/reset';
 @import 'assets/stylesheets/fonts';
 
-#root {
+body {
   @include lato-bold();
+  background-image: linear-gradient(-20deg, #2b5876 0%, #4e4376 100%);
+
+  //max-width: 600px;
+  width: 100vw;
+  height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   max-width: 600px;
   margin: 0 auto;

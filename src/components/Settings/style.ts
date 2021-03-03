@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       marginRight: '10px',
     },
+    button: {
+      borderRadius: '15px',
+    },
   }),
 )
 

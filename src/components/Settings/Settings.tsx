@@ -15,7 +15,6 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core'
-import { KeyboardArrowDown } from '@material-ui/icons'
 import { InitialStateType } from '../../types/types.'
 import { setFieldSize, setSettingsOpen } from '../../reducer'
 
@@ -41,7 +40,7 @@ const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch }): JSX.Elem
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleSettingsToggle}>
+      <Button className={classes.button} variant="contained" color="primary" onClick={handleSettingsToggle}>
         {state.languageIsEn ? 'Settings' : 'Настройки'}
       </Button>
       <Modal
@@ -64,27 +63,12 @@ const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch }): JSX.Elem
 
             <FormControl component="fieldset">
               <FormLabel component="legend">Field size:</FormLabel>
-              <RadioGroup aria-label="gender" name="gender1" value={state.fieldSize} onChange={handleChangeFieldSize}>
+              <RadioGroup aria-label="gender" name="gender1" value={state.fieldSize} onChange={handleChangeFieldSize} row>
                 <FormControlLabel value={4} control={<Radio />} label="4 x 4" />
                 <FormControlLabel value={5} control={<Radio />} label="5 x 5" />
                 <FormControlLabel value={6} control={<Radio />} label="6 x 6" />
               </RadioGroup>
             </FormControl>
-
-            <Grid container className={classes.gridElement}>
-              <Grid item container xs={3} justify="center">
-                <Grid item className={classes.hotkey}>
-                  <KeyboardArrowDown />
-                </Grid>
-                <Grid item className={classes.hotkey}>
-                  <Typography variant="h6">S</Typography>
-                </Grid>
-              </Grid>
-              <Grid item container xs={9} alignItems="center">
-                <Typography variant="h6">{state.languageIsEn ? 'Move down' : 'Переместить вниз'}</Typography>
-              </Grid>
-            </Grid>
-
             <DialogActions>
               <Button onClick={handleSettingsToggle} color="primary">
                 Close
