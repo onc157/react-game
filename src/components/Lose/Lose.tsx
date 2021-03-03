@@ -1,4 +1,4 @@
-import useStyles from '@components/Lose/style'
+import useStyles from './style'
 import React from 'react'
 import { Backdrop, Button, Fade, Modal, PropTypes, Typography } from '@material-ui/core'
 import { setGameOver, setResetGame } from '../../reducer'

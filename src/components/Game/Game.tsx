@@ -3,11 +3,8 @@ import GameMenu from '../GameMenu/GameMenu'
 import GameStats from '../GameStats/GameStats'
 import GameField from '../GameField/GameField'
 import './style.scss'
-import { getRandomFieldValue } from '@helpers/getRandomFieldValue'
-import { getInitialData } from '@helpers/getInitialData'
-import { GameDataType, StateType } from '../../types/types.'
+import { GameDataType } from '../../types/types.'
 import _ from 'lodash'
-import { isIdenticalArrays } from '@helpers/isIdenticalArrays'
 import swipeLeft from '../../utils/swipeLeft'
 import swipeRight from '../../utils/swipeRight'
 import swipeUp from '../../utils/swipeUp'
@@ -19,7 +16,6 @@ import reducer, {
   setGameContinue,
   setGameData,
   setGameOver,
-  setGlobalScore,
   setInitTime,
   setMaxValue,
   setNowTime,
@@ -33,8 +29,11 @@ import reducer, {
   setStartGame,
   setStartPauseDelay,
 } from '../../reducer'
-import Lose from '@components/Lose/Lose'
-import Win from '@components/Win/Win'
+import { getRandomFieldValue } from '../../helpers/getRandomFieldValue'
+import { getInitialData } from '../../helpers/getInitialData'
+import { isIdenticalArrays } from '../../helpers/isIdenticalArrays'
+import Win from '../Win/Win'
+import Lose from '../Lose/Lose'
 
 const Game = (): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -99,7 +98,6 @@ const Game = (): JSX.Element => {
 
   const setTimer = () => {
     if (!state.isPause) {
-      // console.log(new Date().getTime())
       const diffTime = new Date().getTime() - state.initTime.getTime() - state.pauseDelay
       dispatch(setNowTime(new Date(diffTime)))
     }
@@ -169,6 +167,9 @@ const Game = (): JSX.Element => {
       case KEYS.KEY_P:
         onSetPause()
         break
+      case KEYS.KEY_F:
+        toggleFullScreen()
+        break
       default:
         break
     }
@@ -206,9 +207,26 @@ const Game = (): JSX.Element => {
     return true
   }
 
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      }
+    }
+  }
+
   return (
     <div className="game-wrapper">
-      <GameMenu onSetPause={onSetPause} resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
+      <GameMenu
+        onSetPause={onSetPause}
+        resetGame={resetGame}
+        initField={initField}
+        state={state}
+        dispatch={dispatch}
+        toggleFullScreen={toggleFullScreen}
+      />
       <GameField cellsValue={state.gameData} state={state} />
       <GameStats state={state} />
       <Lose resetGame={resetGame} state={state} dispatch={dispatch} />

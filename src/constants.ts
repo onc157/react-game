@@ -13,4 +13,5 @@ export const KEYS = {
   KEY_G: 'KeyG',
   KEY_T: 'KeyT',
   KEY_P: 'KeyP',
+  KEY_F: 'KeyF',
 }

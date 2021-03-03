@@ -1,4 +1,4 @@
-import useStyles from '@components/About/style'
+import useStyles from './style'
 import React from 'react'
 import { Backdrop, Button, DialogActions, Fade, Grid, Modal, PropTypes, Typography } from '@material-ui/core'
 import { KeyboardArrowDown, KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUp } from '@material-ui/icons'
@@ -143,6 +143,16 @@ const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, dispatch }): JS
               </Grid>
               <Grid item container xs={9} alignItems="center">
                 <Typography variant="h6">{languageIsEn ? 'Pause' : 'Пауза'}</Typography>
+              </Grid>
+            </Grid>
+            <Grid container className={classes.gridElement}>
+              <Grid item container xs={3} justify="center">
+                <div className={classes.hotkey}>
+                  <Typography variant="h6">F</Typography>
+                </div>
+              </Grid>
+              <Grid item container xs={9} alignItems="center">
+                <Typography variant="h6">{languageIsEn ? 'Fullscreen mode' : 'Полноэкранный режим'}</Typography>
               </Grid>
             </Grid>
             <DialogActions>

@@ -33,9 +33,16 @@ const useStyles = makeStyles((theme: Theme) =>
     formLabel: {
       color: '#FFF',
     },
-    // radioGroup: {
-    //   display,
-    // },
+    fullscreen: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    fullscreenButton: {
+      border: 'none',
+      borderRadius: '15px',
+      background: 'rgba(255, 255, 255, 0.4)',
+    },
   }),
 )
 

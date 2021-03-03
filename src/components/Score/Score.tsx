@@ -1,4 +1,4 @@
-import useStyles from '@components/Score/style'
+import useStyles from './style'
 import React from 'react'
 import {
   Backdrop,

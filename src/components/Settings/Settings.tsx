@@ -1,4 +1,4 @@
-import useStyles from '@components/Settings/style'
+import useStyles from './style'
 import React from 'react'
 import {
   Backdrop,
@@ -8,7 +8,6 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  Grid,
   Modal,
   PropTypes,
   Radio,
@@ -16,16 +15,18 @@ import {
   Typography,
 } from '@material-ui/core'
 import { StateType } from '../../types/types.'
-import { setFieldSize, setLanguage, setSettingsOpen } from '../../reducer'
+import { setFieldSize, setFullScreen, setLanguage, setSettingsOpen } from '../../reducer'
+import { Fullscreen, FullscreenExit } from '@material-ui/icons'
 
 type PropTypes = {
   resetGame: () => void
   initField: () => void
   state: StateType
   dispatch: any
+  toggleFullScreen: () => void
 }
 
-const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch }): JSX.Element => {
+const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch, toggleFullScreen }): JSX.Element => {
   const classes = useStyles()
 
   const handleChangeFieldSize = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,12 +35,17 @@ const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch }): JSX.Elem
     resetGame()
   }
 
-  const handleChangeLanguage = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeLanguage = () => {
     dispatch(setLanguage(!state.languageIsEn))
   }
 
   const handleSettingsToggle = () => {
     dispatch(setSettingsOpen(!state.settingsIsOpen))
+  }
+
+  const handleFullscreenToggle = () => {
+    dispatch(setFullScreen(!state.fullScreenIsActive))
+    toggleFullScreen()
   }
 
   return (
@@ -90,6 +96,15 @@ const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch }): JSX.Elem
                 <FormControlLabel value={false} control={<Radio />} label={state.languageIsEn ? 'Russian:' : 'Русский:'} />
               </RadioGroup>
             </FormControl>
+            <div className={classes.fullscreen}>
+              <Typography paragraph variant="body1" component="div">
+                {state.languageIsEn ? 'Fullscreen Mode: ' : 'Полноэкранный режим: '}
+              </Typography>
+
+              <Button className={classes.button} variant="contained" color="primary" onClick={handleFullscreenToggle}>
+                {state.fullScreenIsActive ? <FullscreenExit /> : <Fullscreen />}
+              </Button>
+            </div>
             <DialogActions>
               <Button className={classes.closeButton} onClick={handleSettingsToggle} color="primary">
                 Close

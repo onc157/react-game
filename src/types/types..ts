@@ -25,4 +25,5 @@ export type StateType = {
   scoreValue: number
   globalScoreValue: number
   scoreData: ScoreDataType[]
+  fullScreenIsActive: boolean
 }

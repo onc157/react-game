@@ -1,5 +1,5 @@
 import { setGlobalScore, setMaxValue, setScore } from '../reducer'
-import checkGameIsWin from '@helpers/checkGameIsWin'
+import checkGameIsWin from './checkGameIsWin'
 
 const updateScoreValues = (value: number, maxValue: number, dispatch: any, gameIsContinue: boolean) => {
   dispatch(setScore(value))

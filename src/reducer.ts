@@ -21,6 +21,7 @@ const SET_SCORE = 'SET_SCORE'
 const SET_GLOBAL_SCORE = 'SET_GLOBAL_SCORE'
 const SET_SCORE_DATA = 'SET_FETCH_SCORE'
 const SET_FETCH_DATA = 'SET_FETCH_DATA'
+const SET_FULLSCREEN = 'SET_FULLSCREEN'
 
 export const initialState: StateType = {
   fieldSize: 4,
@@ -43,9 +44,10 @@ export const initialState: StateType = {
   scoreValue: 0,
   globalScoreValue: 0,
   scoreData: [],
+  fullScreenIsActive: false,
 }
 
-const reducer = (state: StateType, action: any) => {
+const reducer = (state: StateType, action: any): StateType => {
   switch (action.type) {
     case SET_FIELD_SIZE:
       return {
@@ -152,7 +154,6 @@ const reducer = (state: StateType, action: any) => {
     case SET_SCORE_DATA:
       // eslint-disable-next-line no-case-declarations
       const value = action.scoreForLocal
-      console.log(value)
       // eslint-disable-next-line no-case-declarations
       const time = `${state.nowTime.getMinutes()} : ${state.nowTime.getSeconds()}`
       // eslint-disable-next-line no-case-declarations
@@ -174,6 +175,11 @@ const reducer = (state: StateType, action: any) => {
         ...action.fetchData,
         initTime: new Date(action.fetchData.initTime),
         nowTime: new Date(action.fetchData.nowTime),
+      }
+    case SET_FULLSCREEN:
+      return {
+        ...state,
+        fullScreenIsActive: action.fullScreenIsActive,
       }
     default:
       return state
@@ -201,5 +207,6 @@ export const setScore = (scoreValue: number) => ({ type: SET_SCORE, scoreValue }
 export const setGlobalScore = (globalScoreValue: number) => ({ type: SET_GLOBAL_SCORE, globalScoreValue })
 export const setScoreData = (scoreForLocal: number) => ({ type: SET_SCORE_DATA, scoreForLocal })
 export const setFetchData = (fetchData: StateType) => ({ type: SET_FETCH_DATA, fetchData })
+export const setFullScreen = (fullScreenIsActive: boolean) => ({ type: SET_FULLSCREEN, fullScreenIsActive })
 
 export default reducer

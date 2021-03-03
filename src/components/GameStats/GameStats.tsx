@@ -1,7 +1,5 @@
 import React from 'react'
-import { Chip } from '@material-ui/core'
 import './style.scss'
-import useStyles from './style'
 import { StateType } from '../../types/types.'
 
 type PropTypes = {

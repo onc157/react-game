@@ -1,6 +1,6 @@
 import { GameDataType } from '../types/types.'
-import { getCopyOfArray } from '@helpers/getCopyOfArray'
-import updateScoreValues from '@helpers/updateScoreValues'
+import { getCopyOfArray } from '../helpers/getCopyOfArray'
+import updateScoreValues from '../helpers/updateScoreValues'
 
 const swipeLeft = (copyData: GameDataType, fieldSize: number, maxValue: number, dispatch: any, gameIsContinue: boolean): GameDataType => {
   const newData = getCopyOfArray(copyData)
