@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import GameMenu from '../GameMenu/GameMenu'
 import GameStats from '../GameStats/GameStats'
 import GameField from '../GameField/GameField'
@@ -24,24 +24,9 @@ import reducer, {
   setStartGame,
   setStartPauseDelay,
 } from '../../reducer'
-import { stat } from 'fs'
 
 const Game = (): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState)
-
-  // const [fieldSize, setFieldSize] = useState<number>(4)
-  // const [gameData, setGameData] = useState<GameDataType>(getInitialData(state.fieldSize))
-  // const [initTime, setInitTime] = useState(new Date())
-  // const [nowTime, setNowTime] = useState<Date>(new Date(new Date().getTime() - new Date().getTime()))
-  // const [isPause, setPause] = useState(false)
-  // const [pauseDelay, setPauseDelay] = useState(0)
-  // const [startPauseDelay, setStartPauseDelay] = useState<Date | undefined>()
-  // const [languageIsEn, setLanguage] = useState(true)
-  // const [gameIsOver, setGameOver] = useState(false)
-  // const [gameIsStart, setStartGame] = useState(false)
-  // const [aboutIsOpen, setAboutOpen] = useState(false)
-  // const [settingsIsOpen, setSettingsOpen] = useState(false)
-  // const [gameIsReset, setResetGame] = useState(false)
 
   const addRandomValue = (newData: GameDataType) => {
     let isAdded = false
@@ -107,7 +92,7 @@ const Game = (): JSX.Element => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        newData = swipeLeft(state.gameData, state.fieldSize)
+        newData = swipeLeft(state.gameData, state.fieldSize, state.maxValue, dispatch)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -115,7 +100,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        newData = swipeRight(state.gameData, state.fieldSize)
+        newData = swipeRight(state.gameData, state.fieldSize, state.maxValue, dispatch)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -123,7 +108,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        newData = swipeUp(state.gameData, state.fieldSize)
+        newData = swipeUp(state.gameData, state.fieldSize, state.maxValue, dispatch)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -131,7 +116,7 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
-        newData = swipeDown(state.gameData, state.fieldSize)
+        newData = swipeDown(state.gameData, state.fieldSize, state.maxValue, dispatch)
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -177,7 +162,7 @@ const Game = (): JSX.Element => {
   return (
     <div className="game-wrapper">
       <GameMenu onSetPause={onSetPause} resetGame={resetGame} initField={initField} state={state} dispatch={dispatch} />
-      <GameStats nowTime={state.nowTime} />
+      <GameStats state={state} />
       <GameField cellsValue={state.gameData} />
     </div>
   )

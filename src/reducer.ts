@@ -13,6 +13,7 @@ const SET_GAME_START = 'SET_GAME_START'
 const SET_ABOUT_OPEN = 'SET_ABOUT_OPEN'
 const SET_SETTINGS_OPEN = 'SET_SETTINGS_OPEN'
 const SET_RESET_GAME = 'SET_RESET_GAME'
+const SET_MAX_VALUE = 'SET_MAX_VALUE'
 
 export const initialState: InitialStateType = {
   fieldSize: 4,
@@ -28,6 +29,7 @@ export const initialState: InitialStateType = {
   aboutIsOpen: false,
   settingsIsOpen: false,
   gameIsReset: false,
+  maxValue: 0,
 }
 
 const reducer = (state: InitialStateType, action: any) => {
@@ -97,6 +99,11 @@ const reducer = (state: InitialStateType, action: any) => {
         ...state,
         gameIsReset: action.gameIsReset,
       }
+    case SET_MAX_VALUE:
+      return {
+        ...state,
+        maxValue: action.maxValue,
+      }
     default:
       return state
   }
@@ -115,5 +122,6 @@ export const setStartGame = (gameIsStart: boolean) => ({ type: SET_GAME_START, g
 export const setAboutOpen = (aboutIsOpen: boolean) => ({ type: SET_ABOUT_OPEN, aboutIsOpen })
 export const setSettingsOpen = (settingsIsOpen: boolean) => ({ type: SET_SETTINGS_OPEN, settingsIsOpen })
 export const setResetGame = (gameIsReset: boolean) => ({ type: SET_RESET_GAME, gameIsReset })
+export const setMaxValue = (maxValue: number) => ({ type: SET_MAX_VALUE, maxValue })
 
 export default reducer

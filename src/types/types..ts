@@ -14,4 +14,5 @@ export type InitialStateType = {
   aboutIsOpen: boolean
   settingsIsOpen: boolean
   gameIsReset: boolean
+  maxValue: number
 }

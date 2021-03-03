@@ -1,7 +1,8 @@
 import { GameDataType } from '../types/types.'
 import { getCopyOfArray } from '@helpers/getCopyOfArray'
+import { setMaxValue } from '../reducer'
 
-const swipeRight = (copyData: GameDataType, fieldSize: number): GameDataType => {
+const swipeRight = (copyData: GameDataType, fieldSize: number, maxValue: number, dispatch: any): GameDataType => {
   const newData = getCopyOfArray(copyData)
 
   for (let i = fieldSize - 1; i >= 0; i -= 1) {
@@ -26,6 +27,7 @@ const swipeRight = (copyData: GameDataType, fieldSize: number): GameDataType => 
       } else if (row[prevIndex] !== 0 && row[currentIndex] !== 0) {
         if (row[prevIndex] === row[currentIndex]) {
           row[prevIndex] = row[prevIndex] + row[currentIndex]
+          if (row[prevIndex] > maxValue) dispatch(setMaxValue(row[prevIndex]))
           row[currentIndex] = 0
           currentIndex = prevIndex - 1
           prevIndex -= 1
