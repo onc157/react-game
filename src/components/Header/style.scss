@@ -1,12 +1,17 @@
 .header-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
   padding: 20px;
   display: flex;
+  margin-right: 60px;
+  color: #fff;
 
-  .header-logo {
-    margin-right: 20px;
+  .header__logo {
+    margin-right: 5px;
   }
 
-  .header-author {
+  .header__author {
 
   }
 }

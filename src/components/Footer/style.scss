@@ -2,9 +2,34 @@
   display: flex;
   justify-content: space-between;
 
-  padding: 10px;
+  width: 100%;
+  padding: 10px 60px;
 
-  .footer-school {}
-  .footer-author {}
+  color: #fff;
+
+  .footer-school {
+    a {
+      text-decoration: none;
+      color: #fff;
+      transition: .3s;
+
+      &:hover {
+        cursor: pointer;
+        color: #1da1f2;
+      }
+    }
+  }
+  .footer-author {
+    a {
+      text-decoration: none;
+      color: #fff;
+      transition: .3s;
+
+      &:hover {
+        cursor: pointer;
+        color: #1da1f2;
+      }
+    }
+  }
   .footer-year {}
 }
