@@ -15,7 +15,7 @@ import {
   Paper,
   DialogActions,
 } from '@material-ui/core'
-import { ScoreDataType, StateType } from '../../types/types.'
+import { ScoreDataType, StateType } from '../../types/types'
 import { setScoreOpen } from '../../reducer'
 
 type PropTypes = {

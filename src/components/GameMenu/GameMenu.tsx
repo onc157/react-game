@@ -1,15 +1,12 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 import './style.scss'
-import { StateType } from '../../types/types.'
+import { StateType } from '../../types/types'
 import { setResetGame } from '../../reducer'
 import About from '../About/About'
 import Score from '../Score/Score'
 import Settings from '../Settings/Settings'
 import useStyles from './style'
-import useSound from 'use-sound'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 
 type PropTypes = {
   onSetPause: () => void

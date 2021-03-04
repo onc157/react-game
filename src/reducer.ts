@@ -1,4 +1,4 @@
-import { GameDataType, ScoreDataType, StateType } from './types/types.'
+import { GameDataType, ScoreDataType, StateType } from './types/types'
 
 const SET_FIELD_SIZE = 'SET_FIELD_SIZE'
 const SET_GAME_DATA = 'SET_GAME_DATA'

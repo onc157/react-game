@@ -1,4 +1,4 @@
-import { GameDataType } from '../types/types.'
+import { GameDataType } from '../types/types'
 import { getCopyOfArray } from '../helpers/getCopyOfArray'
 import updateScoreValues from '../helpers/updateScoreValues'
 

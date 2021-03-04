@@ -1,7 +1,7 @@
 import React from 'react'
 import FieldCell from '../FieldCell/FieldCell'
 import './style.scss'
-import { StateType } from '../../types/types.'
+import { StateType } from '../../types/types'
 
 type PropTypes = {
   cellsValue: (number | null)[][]

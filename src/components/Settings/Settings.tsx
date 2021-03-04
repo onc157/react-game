@@ -16,7 +16,7 @@ import {
   Slider,
   Typography,
 } from '@material-ui/core'
-import { StateType } from '../../types/types.'
+import { StateType } from '../../types/types'
 import { setFieldSize, setFullScreen, setLanguage, setMusic, setMusicValue, setSettingsOpen, setSound, setSoundValue } from '../../reducer'
 import { Fullscreen, FullscreenExit, MusicNote, MusicOff, VolumeDown, VolumeUp } from '@material-ui/icons'
 

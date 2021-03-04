@@ -2,7 +2,7 @@ import useStyles from './style'
 import React from 'react'
 import { Backdrop, Button, Fade, Modal, PropTypes, Typography } from '@material-ui/core'
 import { setGameOver, setResetGame } from '../../reducer'
-import { StateType } from '../../types/types.'
+import { StateType } from '../../types/types'
 
 type PropTypes = {
   resetGame: () => void

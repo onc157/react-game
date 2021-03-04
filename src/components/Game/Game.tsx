@@ -3,7 +3,7 @@ import GameMenu from '../GameMenu/GameMenu'
 import GameStats from '../GameStats/GameStats'
 import GameField from '../GameField/GameField'
 import './style.scss'
-import { GameDataType } from '../../types/types.'
+import { GameDataType } from '../../types/types'
 import _ from 'lodash'
 import swipeLeft from '../../utils/swipeLeft'
 import swipeRight from '../../utils/swipeRight'
@@ -47,6 +47,7 @@ import loseSoundSrc from '../../assets/sounds/lose.mp3'
 // @ts-ignore
 import openModalSoundSrc from '../../assets/sounds/open.ogg'
 import useSound from 'use-sound'
+import { getRandomDirection } from '../../helpers/getRandomDirection'
 
 const Game = (): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -57,6 +58,7 @@ const Game = (): JSX.Element => {
   const [modalSound] = useSound(openModalSoundSrc, { volume: state.soundValue })
 
   const addRandomValue = (newData: GameDataType) => {
+    console.log(getRandomDirection())
     if (state.isPause) onSetPause()
     let isAdded = false
 
@@ -119,33 +121,6 @@ const Game = (): JSX.Element => {
     }
   }, [state.fieldSize, state.gameIsReset])
 
-  const setTimer = () => {
-    if (!state.isPause) {
-      const diffTime = new Date().getTime() - state.initTime.getTime() - state.pauseDelay
-      dispatch(setNowTime(new Date(diffTime)))
-    }
-  }
-
-  const playBgSound = () => {
-    if (state.isMusicOn) {
-      stop()
-      setTimeout(() => {
-        bgSoundOn()
-      }, 100)
-    }
-  }
-
-  const playEventSound = (soundPlay: () => void) => {
-    if (state.isSoundOn) {
-      soundPlay()
-    }
-  }
-
-  const setLocalStorage = () => {
-    const fetchData = { ...state }
-    localStorage.setItem('state', JSON.stringify(fetchData))
-  }
-
   useEffect(() => {
     window.addEventListener('beforeunload', setLocalStorage)
     return () => window.removeEventListener('beforeunload', setLocalStorage)
@@ -161,81 +136,98 @@ const Game = (): JSX.Element => {
     return () => clearInterval(updateTimeInterval)
   }, [state.isPause, state.pauseDelay, state.startPauseDelay, resetGame])
 
-  const handleKeydown = (e: KeyboardEvent) => {
-    let newData = []
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  })
 
+  const moveLeft = () => {
+    playEventSound(bumpSound)
+    const newData = swipeLeft(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+
+  const moveRight = () => {
+    playEventSound(bumpSound)
+    const newData = swipeRight(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+
+  const moveUp = () => {
+    playEventSound(bumpSound)
+    const newData = swipeUp(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+  const moveDown = () => {
+    playEventSound(bumpSound)
+    const newData = swipeDown(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+  const handleKeydown = (e: KeyboardEvent) => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        playEventSound(bumpSound)
-        newData = swipeLeft(
-          state.gameData,
-          state.fieldSize,
-          state.globalScoreValue,
-          state.maxValue,
-          dispatch,
-          state.gameIsContinue,
-          playEventSound,
-          winSound,
-        )
-        if (!isIdenticalArrays(state.gameData, newData)) {
-          addRandomValue(newData)
-        }
-        dispatch(setGameData(newData))
+        moveLeft()
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        playEventSound(bumpSound)
-        newData = swipeRight(
-          state.gameData,
-          state.fieldSize,
-          state.globalScoreValue,
-          state.maxValue,
-          dispatch,
-          state.gameIsContinue,
-          playEventSound,
-          winSound,
-        )
-        if (!isIdenticalArrays(state.gameData, newData)) {
-          addRandomValue(newData)
-        }
-        dispatch(setGameData(newData))
+        moveRight()
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        playEventSound(bumpSound)
-        newData = swipeUp(
-          state.gameData,
-          state.fieldSize,
-          state.globalScoreValue,
-          state.maxValue,
-          dispatch,
-          state.gameIsContinue,
-          playEventSound,
-          winSound,
-        )
-        if (!isIdenticalArrays(state.gameData, newData)) {
-          addRandomValue(newData)
-        }
-        dispatch(setGameData(newData))
+        moveUp()
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
-        playEventSound(bumpSound)
-        newData = swipeDown(
-          state.gameData,
-          state.fieldSize,
-          state.globalScoreValue,
-          state.maxValue,
-          dispatch,
-          state.gameIsContinue,
-          playEventSound,
-          winSound,
-        )
-        if (!isIdenticalArrays(state.gameData, newData)) {
-          addRandomValue(newData)
-        }
-        dispatch(setGameData(newData))
+        moveDown()
         break
       case KEYS.KEY_N:
         resetGame()
@@ -257,12 +249,6 @@ const Game = (): JSX.Element => {
         break
     }
   }
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeydown)
-    return () => window.removeEventListener('keydown', handleKeydown)
-  })
-
   const onSetPause = () => {
     if (!state.isPause) {
       dispatch(setStartPauseDelay(new Date()))
@@ -290,6 +276,18 @@ const Game = (): JSX.Element => {
     return true
   }
 
+  const setTimer = () => {
+    if (!state.isPause) {
+      const diffTime = new Date().getTime() - state.initTime.getTime() - state.pauseDelay
+      dispatch(setNowTime(new Date(diffTime)))
+    }
+  }
+
+  const setLocalStorage = () => {
+    const fetchData = { ...state }
+    localStorage.setItem('state', JSON.stringify(fetchData))
+  }
+
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen()
@@ -297,6 +295,21 @@ const Game = (): JSX.Element => {
       if (document.exitFullscreen) {
         document.exitFullscreen()
       }
+    }
+  }
+
+  const playBgSound = () => {
+    if (state.isMusicOn) {
+      stop()
+      setTimeout(() => {
+        bgSoundOn()
+      }, 100)
+    }
+  }
+
+  const playEventSound = (soundPlay: () => void) => {
+    if (state.isSoundOn) {
+      soundPlay()
     }
   }
 
