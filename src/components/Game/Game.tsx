@@ -1,0 +1,338 @@
+import React, { useEffect, useReducer } from 'react'
+import GameMenu from '../GameMenu/GameMenu'
+import GameStats from '../GameStats/GameStats'
+import GameField from '../GameField/GameField'
+import './style.scss'
+import { GameDataType } from '../../types/types'
+import _ from 'lodash'
+import swipeLeft from '../../utils/swipeLeft'
+import swipeRight from '../../utils/swipeRight'
+import swipeUp from '../../utils/swipeUp'
+import swipeDown from '../../utils/swipeDown'
+import { INITIAL_MOVES, KEYS } from '../../constants'
+import reducer, {
+  initialState,
+  setFetchData,
+  setGameContinue,
+  setGameData,
+  setGameOver,
+  setInitTime,
+  setMaxValue,
+  setMusic,
+  setNowTime,
+  setPause,
+  setPauseDelay,
+  setResetGame,
+  setScore,
+  setScoreData,
+  setScoreOpen,
+  setSettingsOpen,
+  setSound,
+  setStartGame,
+  setStartPauseDelay,
+} from '../../reducer'
+import { getRandomFieldValue } from '../../helpers/getRandomFieldValue'
+import { getInitialData } from '../../helpers/getInitialData'
+import { isIdenticalArrays } from '../../helpers/isIdenticalArrays'
+import Win from '../Win/Win'
+import Lose from '../Lose/Lose'
+// @ts-ignore
+import bgSoundSrc from '../../assets/sounds/bg.mp3'
+// @ts-ignore
+import bumpSoundSrc from '../../assets/sounds/bump.mp3'
+// @ts-ignore
+import winSoundSrc from '../../assets/sounds/win.mp3'
+// @ts-ignore
+import loseSoundSrc from '../../assets/sounds/lose.mp3'
+// @ts-ignore
+import openModalSoundSrc from '../../assets/sounds/open.ogg'
+import useSound from 'use-sound'
+import { getRandomDirection } from '../../helpers/getRandomDirection'
+
+const Game = (): JSX.Element => {
+  const [state, dispatch] = useReducer(reducer, initialState)
+  const [bgSoundOn, { stop }] = useSound(bgSoundSrc, { volume: state.musicValue })
+  const [bumpSound] = useSound(bumpSoundSrc, { volume: state.soundValue })
+  const [winSound] = useSound(winSoundSrc, { volume: state.soundValue })
+  const [loseSound] = useSound(loseSoundSrc, { volume: state.soundValue })
+  const [modalSound] = useSound(openModalSoundSrc, { volume: state.soundValue })
+
+  const addRandomValue = (newData: GameDataType) => {
+    console.log(getRandomDirection())
+    if (state.isPause) onSetPause()
+    let isAdded = false
+
+    while (!isAdded) {
+      const getRandomRow = _.random(state.fieldSize - 1)
+      const getRandomColumn = _.random(state.fieldSize - 1)
+
+      if (newData[getRandomRow][getRandomColumn] === 0) {
+        newData[getRandomRow][getRandomColumn] = getRandomFieldValue()
+        isAdded = true
+      }
+
+      if (state.gameIsStart && !checkGameIsOver(newData)) {
+        playEventSound(loseSound)
+        dispatch(setScoreData(state.scoreValue))
+        dispatch(setGameOver(true))
+        return
+      }
+    }
+  }
+
+  const initField = () => {
+    const initialData = getInitialData(state.fieldSize)
+
+    for (let i = 0; i < INITIAL_MOVES; i += 1) {
+      addRandomValue(initialData)
+    }
+
+    if (state.gameIsStart) {
+      dispatch(setResetGame(false))
+      resetGame()
+    }
+
+    playBgSound()
+
+    dispatch(setStartGame(true))
+    dispatch(setGameData(initialData))
+  }
+
+  const resetGame = () => {
+    stop()
+    localStorage.removeItem('state')
+    dispatch(setPauseDelay(0))
+    dispatch(setInitTime(new Date()))
+    dispatch(setNowTime(new Date(new Date().getTime() - new Date().getTime())))
+    dispatch(setMaxValue(0))
+    dispatch(setScore(0))
+    dispatch(setMaxValue(0))
+    dispatch(setGameContinue(false))
+    dispatch(setSound(true))
+    dispatch(setMusic(true))
+  }
+
+  useEffect(() => {
+    if (localStorage.state) {
+      const fetchData = JSON.parse(localStorage.state)
+      dispatch(setFetchData(fetchData))
+    } else {
+      initField()
+    }
+  }, [state.fieldSize, state.gameIsReset])
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', setLocalStorage)
+    return () => window.removeEventListener('beforeunload', setLocalStorage)
+  })
+
+  useEffect(() => {
+    window.addEventListener('load', playBgSound)
+    return () => window.removeEventListener('load', playBgSound)
+  })
+
+  useEffect(() => {
+    const updateTimeInterval = setInterval(() => setTimer(), 1000)
+    return () => clearInterval(updateTimeInterval)
+  }, [state.isPause, state.pauseDelay, state.startPauseDelay, resetGame])
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  })
+
+  const moveLeft = () => {
+    playEventSound(bumpSound)
+    const newData = swipeLeft(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+
+  const moveRight = () => {
+    playEventSound(bumpSound)
+    const newData = swipeRight(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+
+  const moveUp = () => {
+    playEventSound(bumpSound)
+    const newData = swipeUp(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+  const moveDown = () => {
+    playEventSound(bumpSound)
+    const newData = swipeDown(
+      state.gameData,
+      state.fieldSize,
+      state.globalScoreValue,
+      state.maxValue,
+      dispatch,
+      state.gameIsContinue,
+      playEventSound,
+      winSound,
+    )
+    if (!isIdenticalArrays(state.gameData, newData)) {
+      addRandomValue(newData)
+    }
+    dispatch(setGameData(newData))
+  }
+  const handleKeydown = (e: KeyboardEvent) => {
+    switch (e.code) {
+      case KEYS.LEFT:
+      case KEYS.KEY_A:
+        moveLeft()
+        break
+      case KEYS.RIGHT:
+      case KEYS.KEY_D:
+        moveRight()
+        break
+      case KEYS.ARROW_UP:
+      case KEYS.KEY_W:
+        moveUp()
+        break
+      case KEYS.ARROW_DOWN:
+      case KEYS.KEY_S:
+        moveDown()
+        break
+      case KEYS.KEY_N:
+        resetGame()
+        dispatch(setResetGame(true))
+        break
+      case KEYS.KEY_G:
+        dispatch(setScoreOpen(!state.scoreIsOpen))
+        break
+      case KEYS.KEY_T:
+        dispatch(setSettingsOpen(!state.settingsIsOpen))
+        break
+      case KEYS.KEY_P:
+        onSetPause()
+        break
+      case KEYS.KEY_F:
+        toggleFullScreen()
+        break
+      default:
+        break
+    }
+  }
+  const onSetPause = () => {
+    if (!state.isPause) {
+      dispatch(setStartPauseDelay(new Date()))
+      dispatch(setPause(!state.isPause))
+    } else {
+      const pause = new Date().getTime() - state.startPauseDelay!.getTime()
+      dispatch(setPauseDelay(state.pauseDelay + pause))
+      dispatch(setPause(!state.isPause))
+    }
+  }
+
+  const checkGameIsOver = (newData: GameDataType): boolean => {
+    if (newData.flat().every(cell => cell !== 0)) {
+      for (let i = 0; i < state.fieldSize; i += 1) {
+        for (let j = 0; j < state.fieldSize - 1; j += 1) {
+          if (newData[i][j] === newData[i][j + 1]) {
+            return true
+          } else if (newData[j][i] === newData[j + 1][i]) {
+            return true
+          }
+        }
+      }
+      return false
+    }
+    return true
+  }
+
+  const setTimer = () => {
+    if (!state.isPause) {
+      const diffTime = new Date().getTime() - state.initTime.getTime() - state.pauseDelay
+      dispatch(setNowTime(new Date(diffTime)))
+    }
+  }
+
+  const setLocalStorage = () => {
+    const fetchData = { ...state }
+    localStorage.setItem('state', JSON.stringify(fetchData))
+  }
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen()
+      }
+    }
+  }
+
+  const playBgSound = () => {
+    if (state.isMusicOn) {
+      stop()
+      setTimeout(() => {
+        bgSoundOn()
+      }, 100)
+    }
+  }
+
+  const playEventSound = (soundPlay: () => void) => {
+    if (state.isSoundOn) {
+      soundPlay()
+    }
+  }
+
+  return (
+    <div className="game-wrapper">
+      <GameMenu
+        onSetPause={onSetPause}
+        resetGame={resetGame}
+        initField={initField}
+        state={state}
+        dispatch={dispatch}
+        toggleFullScreen={toggleFullScreen}
+        bgSoundOn={bgSoundOn}
+        stop={stop}
+        playSound={playEventSound}
+        modalSound={modalSound}
+      />
+      <GameField cellsValue={state.gameData} state={state} />
+      <GameStats state={state} />
+      <Lose resetGame={resetGame} state={state} dispatch={dispatch} />
+      <Win resetGame={resetGame} state={state} dispatch={dispatch} />
+    </div>
+  )
+}
+
+export default Game

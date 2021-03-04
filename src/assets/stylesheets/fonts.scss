@@ -1,0 +1,17 @@
+@mixin lato-regular {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@mixin lato-bold {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 700;
+}
+
+@mixin roboto-bold {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 900;
+}
