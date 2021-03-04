@@ -8,15 +8,17 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   Modal,
   PropTypes,
   Radio,
   RadioGroup,
+  Slider,
   Typography,
 } from '@material-ui/core'
 import { StateType } from '../../types/types.'
-import { setFieldSize, setFullScreen, setLanguage, setSettingsOpen } from '../../reducer'
-import { Fullscreen, FullscreenExit } from '@material-ui/icons'
+import { setFieldSize, setFullScreen, setLanguage, setMusic, setMusicValue, setSettingsOpen, setSound, setSoundValue } from '../../reducer'
+import { Fullscreen, FullscreenExit, MusicNote, MusicOff, VolumeDown, VolumeUp } from '@material-ui/icons'
 
 type PropTypes = {
   resetGame: () => void
@@ -24,9 +26,22 @@ type PropTypes = {
   state: StateType
   dispatch: any
   toggleFullScreen: () => void
+  bgSoundOn: () => void
+  stop: () => void
+  playSound: (sound: () => void) => void
+  modalSound: () => void
 }
 
-const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch, toggleFullScreen }): JSX.Element => {
+const Settings: React.FC<PropTypes> = ({
+  resetGame,
+  state,
+  dispatch,
+  toggleFullScreen,
+  bgSoundOn,
+  stop,
+  playSound,
+  modalSound,
+}): JSX.Element => {
   const classes = useStyles()
 
   const handleChangeFieldSize = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,12 +55,42 @@ const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch, toggleFullS
   }
 
   const handleSettingsToggle = () => {
+    playSound(modalSound)
     dispatch(setSettingsOpen(!state.settingsIsOpen))
   }
 
   const handleFullscreenToggle = () => {
+    playSound(modalSound)
     dispatch(setFullScreen(!state.fullScreenIsActive))
     toggleFullScreen()
+  }
+
+  const onBgMusicOn = () => {
+    if (!state.isMusicOn) {
+      bgSoundOn()
+    }
+  }
+
+  const onBgMusicOff = () => {
+    if (state.isMusicOn) {
+      stop()
+    }
+  }
+
+  const handleSoundToggle = () => {
+    dispatch(setSound(!state.isSoundOn))
+  }
+
+  const handleMusicToggle = () => {
+    dispatch(setMusic(!state.isMusicOn))
+  }
+
+  const handleChangeSoundValue = (event: any, newValue: number | number[]) => {
+    dispatch(setSoundValue(newValue as number))
+  }
+
+  const handleChangeMusicValue = (event: any, newValue: number | number[]) => {
+    dispatch(setMusicValue(newValue as number))
   }
 
   return (
@@ -105,6 +150,56 @@ const Settings: React.FC<PropTypes> = ({ resetGame, state, dispatch, toggleFullS
                 {state.fullScreenIsActive ? <FullscreenExit /> : <Fullscreen />}
               </Button>
             </div>
+            <FormControl className={classes.form} component="fieldset">
+              <FormLabel className={classes.formLabel} component="legend">
+                {state.languageIsEn ? 'Sound:' : 'Звук:'}
+              </FormLabel>
+              <RadioGroup aria-label="gender" name="gender1" value={state.isSoundOn} onChange={handleSoundToggle} row>
+                <FormControlLabel value={true} control={<Radio />} label={state.languageIsEn ? 'On:' : 'Вкл:'} />
+                <FormControlLabel value={false} control={<Radio />} label={state.languageIsEn ? 'Off:' : 'Выкл:'} />
+              </RadioGroup>
+            </FormControl>
+            <Grid container spacing={2}>
+              <Grid item>
+                <VolumeDown />
+              </Grid>
+              <Grid item xs>
+                <Slider
+                  className={classes.slider}
+                  value={state.soundValue * 100}
+                  onChange={handleChangeSoundValue}
+                  aria-labelledby="continuous-slider"
+                />
+              </Grid>
+              <Grid item>
+                <VolumeUp />
+              </Grid>
+            </Grid>
+            <FormControl className={classes.form} component="fieldset">
+              <FormLabel className={classes.formLabel} component="legend">
+                {state.languageIsEn ? 'Music:' : 'Музыка:'}
+              </FormLabel>
+              <RadioGroup aria-label="gender" name="gender1" value={state.isMusicOn} onChange={handleMusicToggle} row>
+                <FormControlLabel value={true} onClick={onBgMusicOn} control={<Radio />} label={state.languageIsEn ? 'On:' : 'Вкл:'} />
+                <FormControlLabel value={false} onClick={onBgMusicOff} control={<Radio />} label={state.languageIsEn ? 'Off:' : 'Выкл:'} />
+              </RadioGroup>
+            </FormControl>
+            <Grid container spacing={2}>
+              <Grid item>
+                <MusicOff />
+              </Grid>
+              <Grid item xs>
+                <Slider
+                  className={classes.slider}
+                  value={state.musicValue * 100}
+                  onChange={handleChangeMusicValue}
+                  aria-labelledby="continuous-slider"
+                />
+              </Grid>
+              <Grid item>
+                <MusicNote />
+              </Grid>
+            </Grid>
             <DialogActions>
               <Button className={classes.closeButton} onClick={handleSettingsToggle} color="primary">
                 Close

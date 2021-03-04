@@ -9,6 +9,8 @@ const swipeDown = (
   maxValue: number,
   dispatch: any,
   gameIsContinue: boolean,
+  playSound: (sound: () => void) => void,
+  winSound: () => void,
 ): GameDataType => {
   const newData = getCopyOfArray(copyData)
 
@@ -33,7 +35,7 @@ const swipeDown = (
       } else if (newData[prevIndex][i] !== 0 && newData[currentIndex][i] !== 0) {
         if (newData[prevIndex][i] === newData[currentIndex][i]) {
           newData[prevIndex][i] = newData[prevIndex][i] + newData[currentIndex][i]
-          updateScoreValues(newData[prevIndex][i], globalScoreValue, maxValue, dispatch, gameIsContinue)
+          updateScoreValues(newData[prevIndex][i], globalScoreValue, maxValue, dispatch, gameIsContinue, playSound, winSound)
           newData[currentIndex][i] = 0
           currentIndex = prevIndex - 1
           prevIndex -= 1

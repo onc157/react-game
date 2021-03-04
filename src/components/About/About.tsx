@@ -8,12 +8,15 @@ type PropTypes = {
   languageIsEn: boolean
   aboutIsOpen: boolean
   dispatch: any
+  playSound: (sound: () => void) => void
+  modalSound: () => void
 }
 
-const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, dispatch }): JSX.Element => {
+const About: React.FC<PropTypes> = ({ languageIsEn, aboutIsOpen, dispatch, playSound, modalSound }): JSX.Element => {
   const classes = useStyles()
 
   const handleAboutToggle = () => {
+    playSound(modalSound)
     dispatch(setAboutOpen(!aboutIsOpen))
   }
 

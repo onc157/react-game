@@ -22,12 +22,15 @@ type PropTypes = {
   languageIsEn: boolean
   state: StateType
   dispatch: any
+  playSound: (sound: () => void) => void
+  modalSound: () => void
 }
 
-const Score: React.FC<PropTypes> = ({ languageIsEn, state, dispatch }): JSX.Element => {
+const Score: React.FC<PropTypes> = ({ languageIsEn, state, dispatch, playSound, modalSound }): JSX.Element => {
   const classes = useStyles()
 
   const handleScoreToggle = () => {
+    playSound(modalSound)
     dispatch(setScoreOpen(!state.scoreIsOpen))
   }
 

@@ -22,6 +22,10 @@ const SET_GLOBAL_SCORE = 'SET_GLOBAL_SCORE'
 const SET_SCORE_DATA = 'SET_FETCH_SCORE'
 const SET_FETCH_DATA = 'SET_FETCH_DATA'
 const SET_FULLSCREEN = 'SET_FULLSCREEN'
+const SET_SOUND = 'SET_SOUND'
+const SET_SOUND_VALUE = 'SET_SOUND_VALUE'
+const SET_MUSIC = 'SET_MUSIC'
+const SET_MUSIC_VALUE = 'SET_MUSIC_VALUE'
 
 export const initialState: StateType = {
   fieldSize: 4,
@@ -45,6 +49,10 @@ export const initialState: StateType = {
   globalScoreValue: 0,
   scoreData: [],
   fullScreenIsActive: false,
+  isSoundOn: true,
+  soundValue: 0.7,
+  isMusicOn: true,
+  musicValue: 0.2,
 }
 
 const reducer = (state: StateType, action: any): StateType => {
@@ -184,6 +192,30 @@ const reducer = (state: StateType, action: any): StateType => {
         ...state,
         fullScreenIsActive: action.fullScreenIsActive,
       }
+    case SET_SOUND: {
+      return {
+        ...state,
+        isSoundOn: action.isSoundOn,
+      }
+    }
+    case SET_MUSIC: {
+      return {
+        ...state,
+        isMusicOn: action.isMusicOn,
+      }
+    }
+    case SET_SOUND_VALUE: {
+      return {
+        ...state,
+        soundValue: action.soundValue / 100,
+      }
+    }
+    case SET_MUSIC_VALUE: {
+      return {
+        ...state,
+        musicValue: action.musicValue / 100,
+      }
+    }
     default:
       return state
   }
@@ -211,5 +243,9 @@ export const setGlobalScore = (globalScoreValue: number) => ({ type: SET_GLOBAL_
 export const setScoreData = (scoreForLocal: number) => ({ type: SET_SCORE_DATA, scoreForLocal })
 export const setFetchData = (fetchData: StateType) => ({ type: SET_FETCH_DATA, fetchData })
 export const setFullScreen = (fullScreenIsActive: boolean) => ({ type: SET_FULLSCREEN, fullScreenIsActive })
+export const setSound = (isSoundOn: boolean) => ({ type: SET_SOUND, isSoundOn })
+export const setSoundValue = (soundValue: number) => ({ type: SET_SOUND_VALUE, soundValue })
+export const setMusic = (isMusicOn: boolean) => ({ type: SET_MUSIC, isMusicOn })
+export const setMusicValue = (musicValue: number) => ({ type: SET_MUSIC_VALUE, musicValue })
 
 export default reducer

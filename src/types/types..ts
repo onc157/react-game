@@ -1,3 +1,5 @@
+import { makeStyles } from '@material-ui/core'
+
 export type GameDataType = number[][]
 export type ScoreDataType = {
   scoreValue: number
@@ -26,4 +28,8 @@ export type StateType = {
   globalScoreValue: number
   scoreData: ScoreDataType[]
   fullScreenIsActive: boolean
+  isSoundOn: boolean
+  soundValue: number
+  isMusicOn: boolean
+  musicValue: number
 }

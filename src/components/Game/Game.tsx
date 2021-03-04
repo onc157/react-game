@@ -18,6 +18,7 @@ import reducer, {
   setGameOver,
   setInitTime,
   setMaxValue,
+  setMusic,
   setNowTime,
   setPause,
   setPauseDelay,
@@ -26,6 +27,7 @@ import reducer, {
   setScoreData,
   setScoreOpen,
   setSettingsOpen,
+  setSound,
   setStartGame,
   setStartPauseDelay,
 } from '../../reducer'
@@ -34,9 +36,25 @@ import { getInitialData } from '../../helpers/getInitialData'
 import { isIdenticalArrays } from '../../helpers/isIdenticalArrays'
 import Win from '../Win/Win'
 import Lose from '../Lose/Lose'
+// @ts-ignore
+import bgSoundSrc from '../../assets/sounds/bg.mp3'
+// @ts-ignore
+import bumpSoundSrc from '../../assets/sounds/bump.mp3'
+// @ts-ignore
+import winSoundSrc from '../../assets/sounds/win.mp3'
+// @ts-ignore
+import loseSoundSrc from '../../assets/sounds/lose.mp3'
+// @ts-ignore
+import openModalSoundSrc from '../../assets/sounds/open.ogg'
+import useSound from 'use-sound'
 
 const Game = (): JSX.Element => {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [bgSoundOn, { stop }] = useSound(bgSoundSrc, { volume: state.musicValue })
+  const [bumpSound] = useSound(bumpSoundSrc, { volume: state.soundValue })
+  const [winSound] = useSound(winSoundSrc, { volume: state.soundValue })
+  const [loseSound] = useSound(loseSoundSrc, { volume: state.soundValue })
+  const [modalSound] = useSound(openModalSoundSrc, { volume: state.soundValue })
 
   const addRandomValue = (newData: GameDataType) => {
     if (state.isPause) onSetPause()
@@ -52,6 +70,7 @@ const Game = (): JSX.Element => {
       }
 
       if (state.gameIsStart && !checkGameIsOver(newData)) {
+        playEventSound(loseSound)
         dispatch(setScoreData(state.scoreValue))
         dispatch(setGameOver(true))
         return
@@ -71,11 +90,14 @@ const Game = (): JSX.Element => {
       resetGame()
     }
 
+    playBgSound()
+
     dispatch(setStartGame(true))
     dispatch(setGameData(initialData))
   }
 
   const resetGame = () => {
+    stop()
     localStorage.removeItem('state')
     dispatch(setPauseDelay(0))
     dispatch(setInitTime(new Date()))
@@ -84,10 +106,11 @@ const Game = (): JSX.Element => {
     dispatch(setScore(0))
     dispatch(setMaxValue(0))
     dispatch(setGameContinue(false))
+    dispatch(setSound(true))
+    dispatch(setMusic(true))
   }
 
   useEffect(() => {
-    // check LocalStorage
     if (localStorage.state) {
       const fetchData = JSON.parse(localStorage.state)
       dispatch(setFetchData(fetchData))
@@ -103,6 +126,21 @@ const Game = (): JSX.Element => {
     }
   }
 
+  const playBgSound = () => {
+    if (state.isMusicOn) {
+      stop()
+      setTimeout(() => {
+        bgSoundOn()
+      }, 100)
+    }
+  }
+
+  const playEventSound = (soundPlay: () => void) => {
+    if (state.isSoundOn) {
+      soundPlay()
+    }
+  }
+
   const setLocalStorage = () => {
     const fetchData = { ...state }
     localStorage.setItem('state', JSON.stringify(fetchData))
@@ -111,6 +149,11 @@ const Game = (): JSX.Element => {
   useEffect(() => {
     window.addEventListener('beforeunload', setLocalStorage)
     return () => window.removeEventListener('beforeunload', setLocalStorage)
+  })
+
+  useEffect(() => {
+    window.addEventListener('load', playBgSound)
+    return () => window.removeEventListener('load', playBgSound)
   })
 
   useEffect(() => {
@@ -124,7 +167,17 @@ const Game = (): JSX.Element => {
     switch (e.code) {
       case KEYS.LEFT:
       case KEYS.KEY_A:
-        newData = swipeLeft(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
+        playEventSound(bumpSound)
+        newData = swipeLeft(
+          state.gameData,
+          state.fieldSize,
+          state.globalScoreValue,
+          state.maxValue,
+          dispatch,
+          state.gameIsContinue,
+          playEventSound,
+          winSound,
+        )
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -132,7 +185,17 @@ const Game = (): JSX.Element => {
         break
       case KEYS.RIGHT:
       case KEYS.KEY_D:
-        newData = swipeRight(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
+        playEventSound(bumpSound)
+        newData = swipeRight(
+          state.gameData,
+          state.fieldSize,
+          state.globalScoreValue,
+          state.maxValue,
+          dispatch,
+          state.gameIsContinue,
+          playEventSound,
+          winSound,
+        )
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -140,7 +203,17 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_UP:
       case KEYS.KEY_W:
-        newData = swipeUp(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
+        playEventSound(bumpSound)
+        newData = swipeUp(
+          state.gameData,
+          state.fieldSize,
+          state.globalScoreValue,
+          state.maxValue,
+          dispatch,
+          state.gameIsContinue,
+          playEventSound,
+          winSound,
+        )
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -148,7 +221,17 @@ const Game = (): JSX.Element => {
         break
       case KEYS.ARROW_DOWN:
       case KEYS.KEY_S:
-        newData = swipeDown(state.gameData, state.fieldSize, state.globalScoreValue, state.maxValue, dispatch, state.gameIsContinue)
+        playEventSound(bumpSound)
+        newData = swipeDown(
+          state.gameData,
+          state.fieldSize,
+          state.globalScoreValue,
+          state.maxValue,
+          dispatch,
+          state.gameIsContinue,
+          playEventSound,
+          winSound,
+        )
         if (!isIdenticalArrays(state.gameData, newData)) {
           addRandomValue(newData)
         }
@@ -226,6 +309,10 @@ const Game = (): JSX.Element => {
         state={state}
         dispatch={dispatch}
         toggleFullScreen={toggleFullScreen}
+        bgSoundOn={bgSoundOn}
+        stop={stop}
+        playSound={playEventSound}
+        modalSound={modalSound}
       />
       <GameField cellsValue={state.gameData} state={state} />
       <GameStats state={state} />

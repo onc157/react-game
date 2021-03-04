@@ -43,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) =>
       borderRadius: '15px',
       background: 'rgba(255, 255, 255, 0.4)',
     },
+    slider: {
+      color: '#FFF',
+    },
   }),
 )
 
